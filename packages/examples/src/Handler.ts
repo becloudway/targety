@@ -1,5 +1,18 @@
-import { CORS, DefaultCORS, Get, Handler, Middleware, Request, Response, ResponseBody } from "targety";
+import {
+    CORS,
+    DefaultCORS,
+    Get,
+    Handler,
+    Middleware,
+    Request,
+    Response,
+    ResponseBody,
+    ValidateQuery,
+    ValidateResponse,
+} from "targety";
 import { Authenticated, AuthenticatedIdentifier } from "./decorator/Authenticated";
+import { TestRequest } from "./dtos/TestRequest";
+import { TestResponse } from "./dtos/TestResponse";
 
 import { isAuthenticated, IsAuthenticatedMetaData } from "./middleware/isAuthenticated";
 
@@ -13,6 +26,8 @@ export class ExampleHandler extends Handler {
 
     @Get("/test")
     @Authenticated()
+    @ValidateQuery(TestRequest)
+    @ValidateResponse(TestResponse)
     @CORS({ AllowCredentials: true, AllowHeaders: ["authenticated"] })
     public async getTestMethod(request: Request): Promise<ResponseBody> {
         return Response.ok(request).send({
