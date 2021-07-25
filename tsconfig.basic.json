@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2020",
+        "lib": ["ES2020"],
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "declaration": false,
+        "skipLibCheck": false,
+        "skipDefaultLibCheck": true,
+        "declarationMap": false,
+        "paths": {
+            "*": ["packages/*"]
+        }
+    },
+    "exclude": ["**/node_modules", "lib", "__test__", "**/.*/", "node_modules"]
+}
