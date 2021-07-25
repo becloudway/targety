@@ -4,8 +4,8 @@
         "target": "ES2017",
         "noImplicitAny": true,
         "preserveConstEnums": true,
-        "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "outDir": "./dist",
         "sourceMap": true,
         "esModuleInterop": true

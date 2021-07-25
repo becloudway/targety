@@ -6,6 +6,6 @@ export interface CorsMetaData {
     AllowCredentials: boolean;
 }
 
-export const CORS = (config: Partial<CorsMetaData>): unknown => methodDecorator(config);
+export const CORS = (config: Partial<CorsMetaData>): MethodDecorator => methodDecorator(config);
 
-export const DefaultCORS = (config: CorsMetaData): unknown => classDecorator(config);
+export const DefaultCORS = (config: CorsMetaData): ClassDecorator => classDecorator(config);
