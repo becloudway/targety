@@ -1,0 +1,3 @@
+# `targety`
+
+> TODO: finalize readme.

@@ -1,0 +1,31 @@
+{
+    "name": "@dev/test-helper",
+    "version": "0.0.0",
+    "description": "> TODO: description",
+    "homepage": "",
+    "private": "true",
+    "license": "ISC",
+    "main": "lib/index.js",
+    "directories": {
+        "lib": "lib",
+        "test": "__tests__"
+    },
+    "files": [
+        "lib"
+    ],
+    "publishConfig": {
+        "registry": "https://registry.npmjs.com/"
+    },
+    "scripts": {
+        "build": "rm -rf lib && tsc"
+    },
+    "dependencies": {
+        "faker": "^4.1.0",
+        "lodash.set": "^4.3.2"
+    },
+    "devDependencies": {
+        "@types/lodash.set": "^4.3.6",
+        "@types/node": "^12.7.9",
+        "dotenv": "^8.2.0"
+    }
+}

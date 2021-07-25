@@ -1,0 +1,11 @@
+import { classDecorator, methodDecorator } from "../../utils/DecoratorHelper";
+
+export interface CorsMetaData {
+    ExposedHeaders: string[];
+    AllowHeaders: string[];
+    AllowCredentials: boolean;
+}
+
+export const CORS = (config: Partial<CorsMetaData>): unknown => methodDecorator(config);
+
+export const DefaultCORS = (config: CorsMetaData): unknown => classDecorator(config);

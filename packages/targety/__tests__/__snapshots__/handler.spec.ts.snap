@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Handler #handle invokes options 1`] = `
+Object {
+  "body": null,
+  "multiValueHeaders": Object {
+    "Access-Control-Allow-Credentials": Array [
+      "true",
+    ],
+    "Access-Control-Allow-Headers": Array [
+      "x-api-key",
+    ],
+    "Access-Control-Allow-Methods": Array [
+      "OPTIONS,GET",
+    ],
+    "Access-Control-Allow-Origin": Array [
+      "http://localhost:3000",
+    ],
+    "Access-Control-Expose-Headers": Array [
+      "x-test",
+    ],
+  },
+  "statusCode": 200,
+}
+`;
