@@ -15,6 +15,6 @@
         "typescript": "^3.8.3"
     },
     "dependencies": {
-        "targety": "^0.0.1"
+        "targety": "^0.1.1"
     }
 }

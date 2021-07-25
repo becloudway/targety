@@ -5,9 +5,14 @@ export { Handler, Routes } from "./Handler";
 export { Request, LambdaProxyEvent, LambdaIdentity } from "./Request";
 export { Response } from "./Response";
 export { ResponseBody, ResponseBodyInput } from "./ResponseBody";
-export * as Middlewares from "./middlewares";
 export { Middleware } from "./MiddlewareHandler";
-export * as Types from "./common/types";
-export * from "./common/decorators";
-export * as Enums from "./common/enums";
 export { Metadata } from "./Metadata";
+
+export * as Util from "./utils";
+export * as validation from "./validation";
+export * as Error from "./errors";
+export * as Enums from "./common/enums";
+export * as Types from "./common/types";
+export * as Middlewares from "./middlewares";
+
+export * from "./common/decorators";
