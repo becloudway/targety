@@ -7,6 +7,5 @@ export {
     RequestValidationOptions,
 } from "./RequestValidation";
 export { ValidateResponse } from "./ResponseValidation";
-export { Log, LogLevel } from "./Logger";
 export { CustomErrorHandler, CustomErrorHandlerType, callSelf } from "./CustomerErrorHandler";
 export { DefaultCORS, CorsMetaData, CORS } from "./Cors";

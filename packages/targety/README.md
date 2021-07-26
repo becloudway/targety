@@ -133,7 +133,8 @@ Every response will get a set of Default Headers these can be overwritten and ar
 
 ### Default Logging
 
-The library does use [bunyan](https://github.com/trentm/node-bunyan) for it's logging capabilities, this will be configurable in a later version.
+The library does use [pino](https://github.com/pinojs/pino) for it's logging capabilities, this will be configurable in a later version.
+To enable logging export the environment variable `LOG_LEVEL`.
 
 ## Further Reading
 

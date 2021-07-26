@@ -33,7 +33,7 @@ export abstract class LambdaEntryPoint {
      */
     public async handle(event: LambdaProxyEvent, context: Context): Promise<ResponseBody> {
         let request: Request;
-        LOGGER.debug(event, context, "Lambda Event");
+        LOGGER.debug("Lambda Event %j, Context %j", event, context);
 
         // Makes sure that the response is sent straight away when callback is invoked
         // instead of waiting for the nodejs event loop to be empty. This is best practice

@@ -13,6 +13,5 @@ export * as Validation from "./validation";
 export * as Error from "./errors";
 export * as Enums from "./common/enums";
 export * as Types from "./common/types";
-export * as Middlewares from "./middlewares";
 
 export * from "./common/decorators";

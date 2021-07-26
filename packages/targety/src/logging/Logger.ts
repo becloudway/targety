@@ -1,31 +1,17 @@
-import * as Logger from "bunyan";
-import debugStream from "bunyan-debug-stream";
+import Logger from "pino";
 
-const getLogLevel = (): Logger.LogLevel => {
-    if (process.env.LOG_LEVEL && Logger.levelFromName[process.env.LOG_LEVEL as Logger.LogLevelString]) {
-        return process.env.LOG_LEVEL as Logger.LogLevel;
+const getLogLevel = (): Logger.Level => {
+    if (process.env.LOG_LEVEL) {
+        return process.env.LOG_LEVEL as Logger.Level;
     }
-    return Logger.INFO;
+    return "fatal";
 };
 
-const logger = process.env.DEBUG
-    ? Logger.createLogger({
-          name: "DEBUG_LOGGER",
-          streams: [
-              {
-                  level: "debug",
-                  type: "raw",
-                  stream: debugStream({
-                      basepath: __dirname, // this should be the root folder of your project.
-                      forceColor: true,
-                  }),
-              },
-          ],
-          serializers: debugStream.serializers,
-      })
-    : Logger.createLogger({
-          level: getLogLevel(),
-          name: "APP",
-      });
+const logLevel = getLogLevel();
 
-export const LOGGER: Logger = logger;
+const logger = Logger({
+    level: logLevel,
+    name: "APP",
+});
+
+export const LOGGER: Logger.Logger = logger;

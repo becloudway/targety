@@ -159,6 +159,7 @@
 <span style="color: #000000">    </span><span style="color: #0451A5">&quot;awsRequestId&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;f9d04c1c-794f-44af-aeb0-65c6ef907ff1&quot;</span>
 <span style="color: #000000">}</span>
 </code></pre>
+				<p>The AWS Request Id is the actual AWS Request Id that you could use for finding the corresponding logs.</p>
 				<a href="#the-origin-header-requirement" id="the-origin-header-requirement" style="color: inherit; text-decoration: none;">
 					<h3>The <code>Origin</code> Header Requirement</h3>
 				</a>
@@ -172,7 +173,11 @@
 					<h3>Default Cors Headers</h3>
 				</a>
 				<p>Every response will get a set of Default Headers these can be overwritten and are defined in the library <a href="https://github.com/becloudway/targety/tree/main/packages/targety/src/Response.ts">here</a></p>
-				<p>The AWS Request Id is the actual AWS Request Id that you could use for finding the corresponding logs.</p>
+				<a href="#default-logging" id="default-logging" style="color: inherit; text-decoration: none;">
+					<h3>Default Logging</h3>
+				</a>
+				<p>The library does use <a href="https://github.com/pinojs/pino">pino</a> for it&#39;s logging capabilities, this will be configurable in a later version.
+				To enable logging export the environment variable <code>LOG_LEVEL</code>.</p>
 				<a href="#further-reading" id="further-reading" style="color: inherit; text-decoration: none;">
 					<h2>Further Reading</h2>
 				</a>
@@ -188,6 +193,10 @@
 				<p>The project contains an example in the <a href="https://github.com/becloudway/targety/tree/main/packages/examples">examples</a> directory.
 				This is a working example that can be deployed on AWS if desired.</p>
 				<p>More examples might be added to further explain functionality.</p>
+				<a href="#class-validation" id="class-validation" style="color: inherit; text-decoration: none;">
+					<h3>Class Validation</h3>
+				</a>
+				<p>The build in class validation is just a wrapper around <a href="https://github.com/typestack/class-validator">class-validator</a> I recommend checking out there documentation.</p>
 				<a href="#wip" id="wip" style="color: inherit; text-decoration: none;">
 					<h2>WIP</h2>
 				</a>
@@ -195,6 +204,7 @@
 					<li>API Gateway Proxy Support (/{proxy+})</li>
 					<li>More configuration options</li>
 					<li>Make the docs available as a Page</li>
+					<li>Make the logging module configurable</li>
 				</ul>
 			</div>
 		</div>
@@ -209,9 +219,6 @@
 					</li>
 					<li class=" tsd-kind-namespace">
 						<a href="modules/Error.html">Error</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/Middlewares.html">Middlewares</a>
 					</li>
 					<li class=" tsd-kind-namespace">
 						<a href="modules/Types.html">Types</a>
@@ -235,9 +242,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum">
-						<a href="enums/LogLevel.html" class="tsd-kind-icon">Log<wbr>Level</a>
-					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/Handler.html" class="tsd-kind-icon">Handler</a>
 					</li>
@@ -297,9 +301,6 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#Head" class="tsd-kind-icon">Head</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#Log" class="tsd-kind-icon">Log</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#Options" class="tsd-kind-icon">Options</a>

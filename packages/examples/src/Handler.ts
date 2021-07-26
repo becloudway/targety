@@ -9,7 +9,6 @@ import {
     ResponseBody,
     ValidateQuery,
     ValidateResponse,
-    Error
 } from "targety";
 import { Authenticated, AuthenticatedIdentifier } from "./decorator/Authenticated";
 import { TestRequest } from "./dtos/TestRequest";
