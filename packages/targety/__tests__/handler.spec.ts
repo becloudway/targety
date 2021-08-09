@@ -18,6 +18,15 @@ class HandlerImplementation extends Handler {
     }
 }
 
+class UndefinedMiddlewareImplementation extends Handler {
+    protected middleware: Middleware[];
+
+    @Get("/test-endpont/{id}")
+    public async getProfile(req: Request) {
+        return getProfileStub(req);
+    }
+}
+
 let handlerImplementation: any;
 let event: LambdaProxyEvent;
 let request: any;
@@ -58,7 +67,13 @@ describe("Handler", () => {
             expect(response.statusCode).toEqual(404);
         });
         it("invokes correct path", async () => {
-            const response = await handlerImplementation.handle(request);
+            await handlerImplementation.handle(request);
+            expect(getProfileStub).toHaveBeenCalledTimes(1);
+            expect(getProfileStub).toHaveBeenCalledWith(request);
+        });
+        it("issue-1: should not fail when no middleware is defined", async () => {
+            const impl = new UndefinedMiddlewareImplementation();
+            await impl.handle(request);
             expect(getProfileStub).toHaveBeenCalledTimes(1);
             expect(getProfileStub).toHaveBeenCalledWith(request);
         });
