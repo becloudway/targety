@@ -1,0 +1,27 @@
+---
+swagger: "2.0"
+info:
+    version: "2018-04-30T10:33:10Z"
+    title:
+        Fn::Sub: "mitch-examples-api"
+x-amazon-apigateway-minimum-compression-size: 100000
+x-amazon-apigateway-api-key-source: "HEADER"
+schemes:
+    - "https"
+
+securityDefinitions:
+    api_key:
+        type: "apiKey"
+        name: "x-api-key"
+        in: "header"
+paths:
+    /test:
+        get:
+            x-amazon-apigateway-integration:
+                uri:
+                    Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TargetyExampleFunction.Arn}/invocations"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            responses:
+              '200':
+                description: OK

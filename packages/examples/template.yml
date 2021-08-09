@@ -6,6 +6,52 @@ Transform:
     - AWS::Serverless-2016-10-31
 
 Resources:
+    ApiGatewayApi:
+        Type: 'AWS::ApiGateway::RestApi'
+        Properties:
+            Body: 
+                Fn::Transform:
+                    Name: AWS::Include
+                    Parameters:
+                        Location: s3://api-test-mitch/api-spec.yaml
+            Description: My Pretty Test Api
+            Name: ApiGatewayApi
+
+    ApiGatewayApiDeployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref ApiGatewayApi
+
+    ApiGatewayApiStage:
+        Type: AWS::ApiGateway::Stage
+        Properties:
+            StageName: api
+            Description: The API stage
+            Variables:
+                Stage: api
+            RestApiId: !Ref ApiGatewayApi
+            DeploymentId: !Ref ApiGatewayApiDeployment
+            MethodSettings:
+                - ResourcePath: "/test"
+                  HttpMethod: "GET"
+                  ThrottlingBurstLimit: 100
+                  ThrottlingRateLimit: 20
+
+    ApiGatewayVersionStage:
+        Type: AWS::ApiGateway::Stage
+        Properties:
+            StageName: v3
+            Description: The v3 api stage
+            Variables:
+                Stage: v3
+            RestApiId: !Ref ApiGatewayApi
+            DeploymentId: !Ref ApiGatewayApiDeployment
+            MethodSettings:
+                - ResourcePath: "/test"
+                  HttpMethod: "GET"
+                  ThrottlingBurstLimit: 100
+                  ThrottlingRateLimit: 20
+    
     TargetyExampleFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -14,18 +60,20 @@ Resources:
             MemorySize: 128
             Timeout: 100
             Description: An example function
-            Events:
-                Api:
-                    Type: Api
-                    Properties:
-                        Path: /test
-                        Method: GET
-                ApiOptions:
-                    Type: Api
-                    Properties:
-                        Path: /{proxy+}
-                        Method: OPTIONS
+
+    JmcAuthLambdaPermission:
+        Type: AWS::Lambda::Permission
+        Properties :
+            Action : lambda:InvokeFunction
+            FunctionName : !Ref TargetyExampleFunction
+            Principal : "apigateway.amazonaws.com"
+            SourceArn : !Join
+                - ''
+                - -  "arn:aws:execute-api:"
+                  -  !Sub "${AWS::Region}:"
+                  -  !Sub "${AWS::AccountId}:"
+                  -  !Sub "${ApiGatewayApi}/*/*/*"
 Outputs:
     WebEndpoint:
         Description: "API Gateway endpoint URL for Prod stage"
-        Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+        Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
