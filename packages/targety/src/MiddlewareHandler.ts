@@ -42,16 +42,10 @@ export const isMiddlewareFollowUp = (middlewareFollowUp: MiddlewareFollowUp): bo
  * as state can be shared between multiple requests.
  */
 export class MiddlewareHandler {
-    private route: Route;
-    private middleware: Middleware[];
-
     private middlewareResponses: MiddlewareResponse[] = [];
     private middlewareFollowUps: MiddlewareFollowUp[] = [];
 
-    public constructor(route: Route, middleware: Middleware[]) {
-        this.route = route;
-        this.middleware = middleware;
-    }
+    public constructor(private route: Route, private middleware: Middleware[] = []) {}
 
     /**
      * Handles an incoming request and runs the defined middleware against it.
@@ -109,8 +103,8 @@ export class MiddlewareHandler {
      */
     public async handleSuccessFollowUps(request: Request, response: ResponseBody): Promise<ResponseBody> {
         const result: Array<ResponseBody> = await Promises.resolvePromiseChain(
-            this.middlewareFollowUps.map((followUp: MiddlewareFollowUp) => async () =>
-                await followUp.onSuccess(request, response),
+            this.middlewareFollowUps.map(
+                (followUp: MiddlewareFollowUp) => async () => await followUp.onSuccess(request, response),
             ),
         );
 
@@ -125,8 +119,8 @@ export class MiddlewareHandler {
      */
     public async handleFailureFollowUps(request: Request, error: ApiError | Error): Promise<void> {
         return await Promises.resolvePromiseChain(
-            this.middlewareFollowUps.map((followUp: MiddlewareFollowUp) => async () =>
-                await followUp.onError(request, error),
+            this.middlewareFollowUps.map(
+                (followUp: MiddlewareFollowUp) => async () => await followUp.onError(request, error),
             ),
         );
     }
