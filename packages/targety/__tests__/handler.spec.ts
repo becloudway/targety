@@ -16,6 +16,12 @@ class HandlerImplementation extends Handler {
     public async getProfile(req: Request) {
         return getProfileStub(req);
     }
+
+    @Get("/")
+    @CORS({ ExposedHeaders: ["x-test"] })
+    public async rootPath(req: Request) {
+        return getProfileStub(req);
+    }
 }
 
 class UndefinedMiddlewareImplementation extends Handler {
@@ -92,7 +98,7 @@ describe("Handler", () => {
             expect(middlewareMock).toHaveBeenCalledTimes(1);
             expect(middlewareMock).toHaveBeenCalledWith(
                 request,
-                handlerImplementation.getRouteConfig(request),
+                handlerImplementation.routes[0],
                 undefined,
             );
             expect(getProfileStub).toHaveBeenCalledTimes(1);
@@ -105,7 +111,7 @@ describe("Handler", () => {
             expect(middlewareMock).toHaveBeenCalledTimes(1);
             expect(middlewareMock).toHaveBeenCalledWith(
                 request,
-                handlerImplementation.getRouteConfig(request),
+                handlerImplementation.routes[0],
                 undefined,
             );
             expect(getProfileStub).not.toHaveBeenCalled();
@@ -113,46 +119,64 @@ describe("Handler", () => {
         });
     });
 
-    describe("#getRouteConfig", () => {
-        it("parses a routeConfig from a request", () => {
-            const route = handlerImplementation.getRouteConfig(request);
+    describe("#ProxyPaths", () => {
 
-            expect(route.method).toEqual("GET");
-            expect(route.name).toEqual("getProfile");
-            expect(route.path).toEqual("/test-endpont/{id}");
-        });
-        it("returns Undefined Route error when METHOD + PATH is not in routeConfig", () => {
-            event.httpMethod = "PATCH";
+        /**
+         * Inconsistency issues on multiple runs
+         */
+        for (let i = 0; i < 20; i ++) {
+            it(`invokes proxy complex path, attempt #${i + 1}`, async () => {
+                event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+                event.httpMethod = "GET";
+                event.resource = "/{proxy+}";
+                event.path = "/test-endpont/1234";
+                request = new Request(event);
+                await handlerImplementation.handle(request);
+                expect(getProfileStub).toHaveBeenCalledTimes(1);
+                expect(getProfileStub).toHaveBeenCalledWith(request);
+            });
+        }
+
+        it("invokes proxy root path", async () => {
+            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event.httpMethod = "GET";
+            event.resource = "/{proxy+}";
+            event.path = "/";
             request = new Request(event);
-            expect(() => handlerImplementation.getRouteConfig(request)).toThrow("Route undefined");
+            await handlerImplementation.handle(request);
+            expect(getProfileStub).toHaveBeenCalledTimes(1);
+            expect(getProfileStub).toHaveBeenCalledWith(request);
         });
-        it("returns Undefined Route error when METHOD is missing", () => {
-            delete request.method;
-            expect(() => handlerImplementation.getRouteConfig(request)).toThrow("Route undefined");
-        });
-        it("returns Undefined Route error when PATH is missing", () => {
-            event.httpMethod = "PATCH";
+
+        it("invokes proxy test-endpoint path", async () => {
+            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event.httpMethod = "GET";
+            event.resource = "/{proxy+}";
+            event.path = "/test-endpont/1234";
             request = new Request(event);
-            expect(() => handlerImplementation.getRouteConfig(request)).toThrow("Route undefined");
+            await handlerImplementation.handle(request);
+            expect(getProfileStub).toHaveBeenCalledTimes(1);
+            expect(getProfileStub).toHaveBeenCalledWith(request);
         });
-    });
 
-    describe("#getOptionsConfig", () => {
-        it("should get the required config for an option call", () => {
-            const routes = handlerImplementation.getOptionsConfig(request);
-
-            expect(routes.length).toEqual(1);
-
-            const route = routes[0];
-
-            expect(route.method).toEqual("GET");
-            expect(route.name).toEqual("getProfile");
-            expect(route.path).toEqual("/test-endpont/{id}");
-        });
-        it("returns Undefined Route error when PATH is missing", () => {
+        it("invokes nothing with a bogus path", async () => {
+            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event.httpMethod = "GET";
+            event.resource = "/{proxy+}";
+            event.path = "/test-endpont/pizza/test123";
             request = new Request(event);
-            delete request.resource;
-            expect(() => handlerImplementation.getRouteConfig(request)).toThrow("Route undefined");
+            await handlerImplementation.handle(request);
+            expect(getProfileStub).not.toHaveBeenCalled();
         });
-    });
+
+        it("invokes nothing with a path that does not exist", async () => {
+            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event.httpMethod = "GET";
+            event.resource = "/{proxy+}";
+            event.path = "/test-endpont";
+            request = new Request(event);
+            await handlerImplementation.handle(request);
+            expect(getProfileStub).not.toHaveBeenCalled();
+        });
+    })
 });

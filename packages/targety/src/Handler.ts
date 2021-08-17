@@ -1,6 +1,5 @@
 import { LOGGER } from "./logging";
 import { CLASS_METADATA, ROUTES_METADATA } from "./common/Constants";
-import { HttpMethod } from "./common/types";
 import { Request } from "./Request";
 import { Response } from "./Response";
 import { ResponseBody } from "./ResponseBody";
@@ -9,10 +8,10 @@ import { CustomerErrorHandlerMetaData, CustomErrorHandlerType } from "./common/d
 import { Middleware, MiddlewareHandler } from "./MiddlewareHandler";
 import { Context } from "./common/interfaces";
 import { InternalServerError, NotFoundError } from "./errors";
-import { Strings } from "./utils";
-import { Route, RouteConfig } from "./Route";
+import { Route } from "./Route";
 import { HandlerMetaData } from "./HandlerMetaData";
 import { CorsMetaData } from "./common/decorators";
+import { PathResolver } from "./PathResolver";
 
 export interface Routes {
     [key: string]: Route;
@@ -39,6 +38,13 @@ export abstract class Handler implements HandlerInterface {
      */
     protected abstract middleware: Middleware[] = [];
     private handlerMetaData: HandlerMetaData = this.getClassMetaData();
+    protected routes: Route[] = [];
+    private pathResolver: PathResolver;
+
+    public constructor() {
+        this.routes = this.createRoutes();
+        this.pathResolver = new PathResolver(this.routes);
+    }
 
     /**
      * Parses the action from the request, executes the middleware
@@ -50,11 +56,32 @@ export abstract class Handler implements HandlerInterface {
         let route: Route;
 
         try {
-            if (request.getMethod() === "OPTIONS") {
-                return await this.handleOptions(request);
+            const resource = this.pathResolver.getFuzzyResource(request);
+
+            if (!resource) {
+                throw new NotFoundError("Resource not found");
             }
 
-            route = this.getRouteConfig(request);
+            if (request.getMethod() === "OPTIONS") {
+                return await OptionsHandler.handleOptions(
+                    request,
+                    this.pathResolver.routeByPathFinder(resource.finalResource),
+                    this.handlerMetaData.getMetaData<CorsMetaData>(),
+                );
+            }
+
+            route = this.pathResolver.routeFinder(request.getMethod(), resource.finalResource);
+
+            if (!route) {
+                throw new NotFoundError("Route not found");
+            }
+
+
+            if (resource.isProxyPath) {
+                const pathParams = this.pathResolver.resolvePathParams(request.getPath(), resource.matcher);
+                request.setParams(pathParams);
+            }
+
 
             middleWareHandler = new MiddlewareHandler(route, this.middleware);
             customErrorHandler = route.getMetaData<CustomerErrorHandlerMetaData>().customErrorHandler;
@@ -76,109 +103,30 @@ export abstract class Handler implements HandlerInterface {
 
             // only log stacks for internal server errors as an error
             finalError.statusCode === InternalServerError.STATUS_CODE
-                ? LOGGER.error("An internal server error occurred", e)
-                : LOGGER.warn("An known error occurred", e);
+                ? LOGGER.error(e, "An internal server error occurred")
+                : LOGGER.warn(e, "An known error occurred");
 
             return finalError;
         }
     }
 
-    /**
-     * Handles incoming option callbacks for the Handler.handle method
-     *
-     * @param request the incoming request
-     */
-    protected async handleOptions(request: Request): Promise<ResponseBody> {
-        const actions = this.getOptionsConfig(request);
-        const corsMetaData = this.handlerMetaData.getMetaData<CorsMetaData>();
-
-        const config = {
-            allowCredentials: corsMetaData.AllowCredentials,
-            allowedHeaders: [...corsMetaData.AllowHeaders],
-            exposedHeaders: [...corsMetaData.ExposedHeaders],
-        };
-
-        actions.forEach((rc) => {
-            const meta = rc.getMetaData<CorsMetaData>();
-            config.allowedHeaders.push(...(meta?.AllowHeaders || []));
-            config.exposedHeaders.push(...(meta?.ExposedHeaders || []));
-            if (!config.allowCredentials) config.allowCredentials = meta.AllowCredentials;
-        });
-
-        const optionsHandler = new OptionsHandler(
-            [],
-            config.allowedHeaders,
-            config.exposedHeaders,
-            config.allowCredentials,
-        );
-
-        return optionsHandler.optionsResponse(request, actions);
-    }
-
-    /**
-     * Parses the request so that it can be handled by our OptionsHandler
-     *
-     * @param request the incoming request
-     */
-    protected getOptionsConfig(request: Request): Route[] {
-        const path: string = request.getResource();
-
-        if (!path) {
-            throw new NotFoundError("Route undefined");
+    private createRoutes(): Route[] {
+        const routes = Reflect.getMetadata(ROUTES_METADATA, this);
+        if (!routes) {
+            LOGGER.warn("No routes defined for handler");
+            return [];
         }
+        const routeNames = Object.keys(routes);
 
-        const routesMetadata = Reflect.getMetadata(ROUTES_METADATA, this) as Routes;
-        const routeNames: string[] = Object.keys(routesMetadata).filter((a) =>
-            Strings.equalsTrimmedCaseInsensitive(path, routesMetadata[a].path),
-        );
-
-        if (!routeNames || routeNames.length === 0) {
-            throw new NotFoundError("Route undefined");
-        }
-
-        return routeNames.map((routeName: string) => {
-            const requestedAction: RouteConfig = routesMetadata[routeName];
-
+        return routeNames.map((v: string) => {
+            const route = routes[v];
             return new Route({
-                name: routeName,
-                path: requestedAction.path,
-                method: requestedAction.method,
-                metaData: requestedAction,
+                name: v,
+                path: route.path,
+                method: route.method,
+                metaData: route,
             });
         });
-    }
-
-    /**
-     * Parses [[HandlerAction]] from request
-     * @throws {Error} Unknown Route error
-     */
-    protected getRouteConfig(request: Request): Route {
-        const path: string = request.getResource();
-        const method: HttpMethod = request.getMethod();
-
-        if (!path || !method) {
-            throw new NotFoundError("Route undefined");
-        }
-
-        const routesMetadata = Reflect.getMetadata(ROUTES_METADATA, this) as Routes;
-        const routeName: string = Object.keys(routesMetadata).find(
-            (a) =>
-                Strings.equalsTrimmedCaseInsensitive(path, routesMetadata[a].path) &&
-                Strings.equalsTrimmedCaseInsensitive(method, routesMetadata[a].method),
-        );
-        if (!routeName) {
-            throw new NotFoundError("Route undefined");
-        }
-
-        const requestedAction: RouteConfig = routesMetadata[routeName];
-        const route = new Route({
-            name: routeName,
-            path: requestedAction.path,
-            method: requestedAction.method,
-            metaData: requestedAction,
-        });
-
-        return route;
     }
 
     protected getClassMetaData(): HandlerMetaData {

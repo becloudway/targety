@@ -439,4 +439,8 @@ export class Request {
     public get metadata(): Metadata {
         return this._metadata;
     }
+
+    public setParams(input: Record<string, string>): void {
+        this.params = input;
+    }
 }

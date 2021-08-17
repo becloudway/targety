@@ -35,4 +35,15 @@ export class ExampleHandler extends Handler {
             name: request.metadata.get<IsAuthenticatedMetaData>(AuthenticatedIdentifier).profile.name,
         });
     }
+
+    @Get("/resources/user/{userId}")
+    @Authenticated()
+    @CORS({ AllowCredentials: true, AllowHeaders: ["authenticated"] })
+    public async getResources(request: Request): Promise<ResponseBody> {
+        const userId = request.getPathParam("userId");
+        return Response.ok(request).send({
+            test: "ok",
+            id: userId,
+        });
+    }
 }
