@@ -14,6 +14,8 @@ A TypeScript based focus build library for Routing on [AWS Lambda](https://aws.a
     - Error Handling
     - Responses
 - Metadata support for request scoped data passing
+- Support for {proxy+}, proxy resources
+    - Works with path parameters as it would normally
 
 ## Installation
 
@@ -158,7 +160,7 @@ The build in class validation is just a wrapper around [class-validator](https:/
 
 ## WIP
 
-- API Gateway Proxy Support (/{proxy+})
+- ~API Gateway Proxy Support (/{proxy+})~
 - More configuration options
 - Make the docs available as a Page
 - Make the logging module configurable

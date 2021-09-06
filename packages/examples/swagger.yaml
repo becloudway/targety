@@ -25,3 +25,13 @@ paths:
             responses:
               '200':
                 description: OK
+    /resources/{proxy+}:
+        any:
+            x-amazon-apigateway-integration:
+                uri:
+                    Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TargetyExampleFunction.Arn}/invocations"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            responses:
+              '200':
+                description: OK

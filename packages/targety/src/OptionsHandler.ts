@@ -3,6 +3,7 @@ import { ResponseBody } from "./ResponseBody";
 import { ForbiddenError } from "./errors";
 import { LOGGER } from "./logging";
 import { Route } from "./Route";
+import { CorsMetaData } from "./common/decorators/Cors";
 
 /**
  * Creates a proper regex to match with the origin of the incoming request
@@ -72,5 +73,38 @@ export class OptionsHandler {
                 "Access-Control-Allow-Credentials": [`${this.allowCredentials}`],
             },
         };
+    }
+
+    /**
+     * Handles incoming option callbacks for the Handler.handle method
+     *
+     * @param request the incoming request
+     */
+    public static async handleOptions(
+        request: Request,
+        actions: Route[],
+        metaData: CorsMetaData,
+    ): Promise<ResponseBody> {
+        const config = {
+            allowCredentials: metaData.AllowCredentials,
+            allowedHeaders: [...metaData.AllowHeaders],
+            exposedHeaders: [...metaData.ExposedHeaders],
+        };
+
+        actions.forEach((rc) => {
+            const meta = rc.getMetaData<CorsMetaData>();
+            config.allowedHeaders.push(...(meta?.AllowHeaders || []));
+            config.exposedHeaders.push(...(meta?.ExposedHeaders || []));
+            if (!config.allowCredentials) config.allowCredentials = meta.AllowCredentials;
+        });
+
+        const optionsHandler = new OptionsHandler(
+            [],
+            config.allowedHeaders,
+            config.exposedHeaders,
+            config.allowCredentials,
+        );
+
+        return optionsHandler.optionsResponse(request, actions);
     }
 }
