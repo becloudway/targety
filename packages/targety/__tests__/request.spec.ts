@@ -126,13 +126,6 @@ describe("Request", () => {
             expect(request.getContext("identity")).toEqual(event.requestContext.identity);
             expect(request.getContext("unknown")).toBeUndefined();
         });
-
-        it("#getPathParam: allows getting a single pathParam", () => {
-            expect(request.getPathParam("id")).toEqual("1234");
-        });
-        it("#getPathParam: returns undefened if not exists", () => {
-            expect(request.getPathParam("unexisting")).toBeUndefined();
-        });
         it("#getCookies", () => {
             expect(request.getCookies()).toBeInstanceOf(Object);
             expect(request.getCookie("accessToken")).toEqual("1234");
