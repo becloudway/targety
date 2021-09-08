@@ -18,6 +18,20 @@ const getValidationObject = (request: Request, paramType: RequestParams): object
     }
 };
 
+const setValidationObject = (request: Request, paramType: RequestParams, input: any): void => {
+    switch (paramType) {
+        case RequestParams.BODY:
+            request.setBody(input);
+            break;
+        case RequestParams.QUERY:
+            request.setQueryParams(input);
+            break;
+        case RequestParams.PATH:
+            request.setPathParams(input);
+            break;
+    }
+};
+
 export const RequestValidation = (
     Klass: new () => ValidationClass,
     paramType: RequestParams,
@@ -33,8 +47,8 @@ export const RequestValidation = (
 
         descriptor.value = async function (request: Request, ...args: any[]) {
             const validationObject = getValidationObject(request, paramType) as { [k: string]: any };
-            LOGGER.debug("%s validation for: %j", paramType, validationObject);
             const klass = plainToClass(Klass, validationObject);
+            LOGGER.debug("%s validation for: %j ===> %j", paramType, validationObject, klass);
 
             const appliedGroups = doApplyGroups && doApplyGroups(validationObject);
             let alteredOptions = validatorOptions;
@@ -51,6 +65,7 @@ export const RequestValidation = (
                 throw new ValidationError({ validationErrors: validationResult });
             }
 
+            setValidationObject(request, paramType, klass);
             return originalMethod.call(this, request, ...args);
         };
     };
@@ -60,11 +75,14 @@ export interface RequestValidationOptions {
     allowUnknownFields?: boolean;
 }
 
-const createMappingDecorator = (paramType: RequestParams) => (
-    klass: new () => ValidationClass,
-    options: RequestValidationOptions = {},
-    doApplyGroups?: (input: any) => string[],
-): MethodDecorator => RequestValidation(klass, paramType, options, doApplyGroups);
+const createMappingDecorator =
+    (paramType: RequestParams) =>
+    (
+        klass: new () => ValidationClass,
+        options: RequestValidationOptions = {},
+        doApplyGroups?: (input: any) => string[],
+    ): MethodDecorator =>
+        RequestValidation(klass, paramType, options, doApplyGroups);
 
 export const ValidateBody = createMappingDecorator(RequestParams.BODY);
 export const ValidateQuery = createMappingDecorator(RequestParams.QUERY);

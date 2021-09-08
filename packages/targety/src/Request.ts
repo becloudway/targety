@@ -139,23 +139,23 @@ export class Request {
         return get(this.rawLambdaEvent, `requestContext.${propertyPath}`);
     }
 
-    /**
-     * Returns query param value filtered for 'null', 'false', true', etc
-     *
-     * Returns undefined if nothing is found.
-     * @param {string} param
-     */
-    public getPathParam(param: string): string | boolean | string[] {
-        return this.valueFilter(this.params[param]);
-    }
     public getQueryParams<T>(defaults?: Partial<T>): T {
         return { ...((defaults as object) || {}), ...(this.query as object) } as T;
+    }
+    public setQueryParams(obj: { [key: string]: string }): void {
+        this.query = obj;
     }
     public getPathParams(): { [key: string]: string } {
         return this.params;
     }
+    public setPathParams(obj: { [key: string]: string }): void {
+        this.params = obj;
+    }
     public getBody<T extends object>(defaults?: Partial<T>): T {
         return { ...((defaults as object) || {}), ...(this.body as object) } as T;
+    }
+    public setBody(obj: string | object): void {
+        this.body = obj;
     }
     public getCookies(): Cookies {
         return this.cookies;
@@ -310,32 +310,6 @@ export class Request {
         }
 
         return bodyString;
-    }
-
-    /**
-     * Converts 'null' to null, 'false' to false, etc
-     * @param (val) val
-     */
-    private valueFilter(val: string | boolean | string[]): string | boolean | string[] {
-        if (typeof val !== "string") {
-            return val;
-        }
-
-        const testVal = val.toLowerCase();
-
-        if (testVal === "true") {
-            return true;
-        }
-
-        if (testVal === "false") {
-            return false;
-        }
-
-        if (testVal === "null") {
-            return null;
-        }
-
-        return val;
     }
 
     public getReferer(): URLParse {
