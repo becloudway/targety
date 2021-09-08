@@ -7403,8 +7403,10 @@ tar-stream@^1.5.2:
     to-buffer "^1.1.1"
     xtend "^4.0.0"
 
-"targety@file:packages/targety":
+targety@0.2.0:
   version "0.2.0"
+  resolved "https://registry.npmjs.org/targety/-/targety-0.2.0.tgz#c00dc95a9689147c1e6cdcd35b571e77bff985ed"
+  integrity sha512-NdL2JuSzU5HUWzj3uvB5X94zR9k8AgqIoxid27+jMCsA/Q4v0wWqDY41qBAacffvHmCbzckNOzex56kyT5rgbg==
   dependencies:
     class-transformer "^0.4.0"
     class-validator "^0.13.1"

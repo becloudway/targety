@@ -3,3 +3,4 @@ src/
 test/
 jest.config.js
 pipelines/
+*.tgz
