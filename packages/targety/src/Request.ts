@@ -145,8 +145,8 @@ export class Request {
     public setQueryParams(obj: { [key: string]: string }): void {
         this.query = obj;
     }
-    public getPathParams(): { [key: string]: string } {
-        return this.params;
+    public getPathParams<T>(): T {
+        return this.params as unknown as T;
     }
     public setPathParams(obj: { [key: string]: string }): void {
         this.params = obj;
