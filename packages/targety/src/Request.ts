@@ -144,17 +144,6 @@ export class Request {
      *
      * Returns undefined if nothing is found.
      * @param {string} param
-     * @typeparam T Request a queryParam of type T. If not specified a type cast is needed for anything but string.
-     */
-    public getQueryParam<T extends string | number | boolean>(param: string): T {
-        return this.cast(this.query[param]) as T;
-    }
-
-    /**
-     * Returns query param value filtered for 'null', 'false', true', etc
-     *
-     * Returns undefined if nothing is found.
-     * @param {string} param
      */
     public getPathParam(param: string): string | boolean | string[] {
         return this.valueFilter(this.params[param]);
@@ -321,32 +310,6 @@ export class Request {
         }
 
         return bodyString;
-    }
-
-    /** Casts a query or path parameter string to a JS primitive type if possible.  */
-    private cast(val: string): string | number | boolean {
-        if (!val) {
-            return undefined;
-        }
-        if (typeof val === "boolean" || typeof val === "number") {
-            return val;
-        }
-        if (val.toLowerCase() === "true") {
-            return true;
-        }
-        if (val.toLowerCase() === "false") {
-            return false;
-        }
-        if (val.toLowerCase() === "null") {
-            return null;
-        }
-        if (val.toLowerCase() === "undefined") {
-            return undefined;
-        }
-        if (!Number.isNaN(parseFloat(val))) {
-            return parseFloat(val);
-        }
-        return val;
     }
 
     /**
