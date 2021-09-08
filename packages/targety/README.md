@@ -118,20 +118,14 @@ Will result in the error response by default as handeld in the [Handler](https:/
 
 The AWS Request Id is the actual AWS Request Id that you could use for finding the corresponding logs.
 
-### The `Origin` Header Requirement
-
-The library forces you to always set the origin header on requests.
-This can give unexpected behavior, but the library uses the Origin header to have
-dynamic cors.
-
-- This will be configurable in a later release
-
-
 ### Default Cors Headers
 
 Every response will get a set of Default Headers these can be overwritten and are defined in the library [here](https://github.com/becloudway/targety/tree/main/packages/targety/src/Response.ts)
 
 
+### AWS Request ID Header
+
+By default the AWS Request ID is returned as a header `X-AWS-Request-Id`
 
 ### Default Logging
 
