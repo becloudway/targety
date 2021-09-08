@@ -73,7 +73,7 @@ export class Response<T> {
         }
 
         if (this.defaultHeaders) {
-            this.setDefaultHeaders();
+            this.setDefaultHeaders(request);
         }
     }
 
@@ -293,7 +293,7 @@ export class Response<T> {
      * Sets some default headers, that can be overridden if needed.
      * Loosely based on: https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html
      */
-    private setDefaultHeaders(): void {
+    private setDefaultHeaders(request: Request): void {
         if (!this.allowLocalhost) {
             this.setHeader("Strict-Transport-Security", "max-age=31536000");
         }
@@ -302,6 +302,8 @@ export class Response<T> {
         this.setHeader("Cache-Control", "no-store");
         this.setHeader("X-Content-Type-Options", "nosniff");
         this.setHeader("Content-Security-Policy", "'self'");
+
+        this.setHeader("X-AWS-Request-Id", request.getRequestId());
     }
 
     private setCorsHeaders(request: Request): void {

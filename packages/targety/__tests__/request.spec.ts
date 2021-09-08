@@ -7,7 +7,7 @@ describe("Request", () => {
     let request: Request;
 
     beforeEach(() => {
-        event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+        event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
         request = new Request(event);
     });
 
@@ -27,9 +27,9 @@ describe("Request", () => {
             expect(request.getBody()).toEqual(JSON.parse(event.body));
         });
         it("can have a string body with unknown encoding but parses it", () => {
-            event = (ApiGateWayProxyEvent.get({
+            event = ApiGateWayProxyEvent.get({
                 headers: { "Content-Type": ["text/html"] },
-            }) as unknown) as LambdaProxyEvent;
+            }) as unknown as LambdaProxyEvent;
             event.body = "a random string";
             request = new Request(event);
             expect(request.getBody()).toEqual({ ...(event.body as any) });
@@ -37,10 +37,10 @@ describe("Request", () => {
         it("accepts urlEncoded data and transforms body to json object", () => {
             const body =
                 "email_channel=nina%40gibtsnicht.com.uat1&mobile_channel=&Onkologie=on&Immunologie=on&Psoriasis=on&Psoriasis+Arthritis=on&Diabetes=on&HIV%2FAIDS=on&Hepatitis+C=on&Prostatakarzinom=on&Mammakarzinom=on&Multiples+Myelom=on&Schizophrenie=on&Ovarialkarzinom=on&Psychiatrie=on";
-            event = (ApiGateWayProxyEvent.get({
+            event = ApiGateWayProxyEvent.get({
                 body,
                 headers: { "Content-Type": ["application/x-www-form-urlencoded"] },
-            }) as unknown) as LambdaProxyEvent;
+            }) as unknown as LambdaProxyEvent;
             request = new Request(event);
             expect(request.getBody()).toHaveProperty("email_channel", "nina@gibtsnicht.com.uat1");
         });
@@ -91,29 +91,6 @@ describe("Request", () => {
         it("#getQueryParams", () => {
             expect(request.getQueryParams()).toEqual(event.queryStringParameters);
         });
-        it("#getQueryParam", () => {
-            expect(request.getQueryParam<string>("foo")).toEqual(event.queryStringParameters.foo);
-        });
-        it("#getQueryParam: fetches and casts a number", () => {
-            expect(request.getQueryParam<number>("number")).toEqual(parseFloat(event.queryStringParameters.number));
-        });
-        it("#getQueryParam: fetches and casts a booolean", () => {
-            expect(request.getQueryParam<boolean>("boolean")).toBeTruthy();
-            expect(request.getQueryParam<boolean>("isFalse")).toBeFalsy();
-        });
-        it("#getQueryParam: fetches and casts a null string", () => {
-            expect(request.getQueryParam<boolean>("name")).toBeNull();
-        });
-        it("#getQueryParam: fetches and casts an undefined string", () => {
-            expect(request.getQueryParam<boolean>("age")).toBeUndefined();
-        });
-        it("#getQueryParam: returns undefined for non existing", () => {
-            expect(request.getQueryParam<boolean>("notexisting")).toBeUndefined();
-        });
-        it("#getQueryParam: does not convert bool or number when already bool or number", () => {
-            expect(request.getQueryParam<boolean>("realBool")).toBeTruthy();
-            expect(request.getQueryParam<number>("realNumber")).toEqual(123);
-        });
         it("#getMethod", () => {
             expect(request.getMethod()).toEqual(event.httpMethod);
         });
@@ -148,13 +125,6 @@ describe("Request", () => {
         it("#getContext: allows getting a requestContext property", () => {
             expect(request.getContext("identity")).toEqual(event.requestContext.identity);
             expect(request.getContext("unknown")).toBeUndefined();
-        });
-
-        it("#getPathParam: allows getting a single pathParam", () => {
-            expect(request.getPathParam("id")).toEqual("1234");
-        });
-        it("#getPathParam: returns undefened if not exists", () => {
-            expect(request.getPathParam("unexisting")).toBeUndefined();
         });
         it("#getCookies", () => {
             expect(request.getCookies()).toBeInstanceOf(Object);

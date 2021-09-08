@@ -139,34 +139,23 @@ export class Request {
         return get(this.rawLambdaEvent, `requestContext.${propertyPath}`);
     }
 
-    /**
-     * Returns query param value filtered for 'null', 'false', true', etc
-     *
-     * Returns undefined if nothing is found.
-     * @param {string} param
-     * @typeparam T Request a queryParam of type T. If not specified a type cast is needed for anything but string.
-     */
-    public getQueryParam<T extends string | number | boolean>(param: string): T {
-        return this.cast(this.query[param]) as T;
-    }
-
-    /**
-     * Returns query param value filtered for 'null', 'false', true', etc
-     *
-     * Returns undefined if nothing is found.
-     * @param {string} param
-     */
-    public getPathParam(param: string): string | boolean | string[] {
-        return this.valueFilter(this.params[param]);
-    }
     public getQueryParams<T>(defaults?: Partial<T>): T {
         return { ...((defaults as object) || {}), ...(this.query as object) } as T;
+    }
+    public setQueryParams(obj: { [key: string]: string }): void {
+        this.query = obj;
     }
     public getPathParams(): { [key: string]: string } {
         return this.params;
     }
+    public setPathParams(obj: { [key: string]: string }): void {
+        this.params = obj;
+    }
     public getBody<T extends object>(defaults?: Partial<T>): T {
         return { ...((defaults as object) || {}), ...(this.body as object) } as T;
+    }
+    public setBody(obj: string | object): void {
+        this.body = obj;
     }
     public getCookies(): Cookies {
         return this.cookies;
@@ -321,58 +310,6 @@ export class Request {
         }
 
         return bodyString;
-    }
-
-    /** Casts a query or path parameter string to a JS primitive type if possible.  */
-    private cast(val: string): string | number | boolean {
-        if (!val) {
-            return undefined;
-        }
-        if (typeof val === "boolean" || typeof val === "number") {
-            return val;
-        }
-        if (val.toLowerCase() === "true") {
-            return true;
-        }
-        if (val.toLowerCase() === "false") {
-            return false;
-        }
-        if (val.toLowerCase() === "null") {
-            return null;
-        }
-        if (val.toLowerCase() === "undefined") {
-            return undefined;
-        }
-        if (!Number.isNaN(parseFloat(val))) {
-            return parseFloat(val);
-        }
-        return val;
-    }
-
-    /**
-     * Converts 'null' to null, 'false' to false, etc
-     * @param (val) val
-     */
-    private valueFilter(val: string | boolean | string[]): string | boolean | string[] {
-        if (typeof val !== "string") {
-            return val;
-        }
-
-        const testVal = val.toLowerCase();
-
-        if (testVal === "true") {
-            return true;
-        }
-
-        if (testVal === "false") {
-            return false;
-        }
-
-        if (testVal === "null") {
-            return null;
-        }
-
-        return val;
     }
 
     public getReferer(): URLParse {
