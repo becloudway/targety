@@ -42,15 +42,9 @@ describe("Response", () => {
     });
     describe("CORS", () => {
         describe("With cors disabled allow requests without origin", () => {
-            it("cors disabled: allows absence of origin header", () => {
-                const response = Response.noContent(request, { cors: false }).send();
+            it("Allows absence of origin header", () => {
+                const response = Response.noContent(request).send();
                 expect(response.statusCode).toEqual(204);
-            });
-            it("cors enabled (default): does not allow absence of origin header", () => {
-                // @ts-ignore
-                request.getOriginClean = jest.fn().mockReturnValue(undefined);
-                request.getOrigin = jest.fn().mockReturnValue(undefined);
-                expect(() => Response.noContent(request).send()).toThrow(InternalServerError);
             });
         });
         describe("Allowed headers are not specified", () => {

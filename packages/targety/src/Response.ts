@@ -182,9 +182,6 @@ export class Response<T> {
 
     private static corsResponse(request: Request, allowedOrigins: string[]): string {
         const origin = request.getOrigin();
-        if (!origin) {
-            throw new InternalServerError("Origin request header not set");
-        }
         if (allowedOrigins.includes("*") || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
             return origin;
         }
