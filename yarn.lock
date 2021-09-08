@@ -5627,9 +5627,9 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 marked@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/marked/-/marked-3.0.2.tgz#60ce97d6aec34dd882ab4bb4df82494666854e17"
-  integrity sha512-TMJQQ79Z0e3rJYazY0tIoMsFzteUGw9fB3FD+gzuIT3zLuG9L9ckIvUfF51apdJkcqc208jJN2KbtPbOvXtbjA==
+  version "3.0.3"
+  resolved "https://registry.npmjs.org/marked/-/marked-3.0.3.tgz#d81ff0f9e29cef0a177327fe009b460f31aa5862"
+  integrity sha512-4oIDhVSQ2s+xNCfek9OnZgCQR/WykGCom02JzIIvi4Pme+MIwPYqvGVW8CQWOXeoZu0TtVB6pTxIuoLm+dKqDA==
 
 meow@^7.0.0:
   version "7.1.1"
@@ -7404,7 +7404,7 @@ tar-stream@^1.5.2:
     xtend "^4.0.0"
 
 "targety@file:packages/targety":
-  version "0.1.10"
+  version "0.2.0"
   dependencies:
     class-transformer "^0.4.0"
     class-validator "^0.13.1"
