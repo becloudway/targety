@@ -84,6 +84,13 @@ describe("Response", () => {
         });
     });
 
+    describe("Should set default headers", () => {
+        it("should set all the default headers", () => {
+            const response = Response.ok(request).send({ success: "ok" });
+            expect(response).toMatchSnapshot();
+        });
+    });
+
     describe("2XX", () => {
         it("#ok: sends 200 response with json", () => {
             const response = Response.ok(request).send({ success: "ok" });
