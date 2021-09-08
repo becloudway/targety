@@ -32,11 +32,10 @@ export abstract class Handler implements HandlerInterface {
      *    function which can be resolved after the execution of the handler code.
      *
      * @protected
-     * @abstract
      * @type {Middleware[]}
      * @memberof Handler
      */
-    protected abstract middleware: Middleware[] = [];
+    protected middleware: Middleware[] = [];
     private handlerMetaData: HandlerMetaData = this.getClassMetaData();
     protected routes: Route[] = [];
     private pathResolver: PathResolver;
