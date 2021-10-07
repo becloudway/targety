@@ -79,9 +79,4 @@ public-key
 .DS_Store
 .history/
 
-# we use yarn!
 package-lock.json
-
-test.html
-
-build.sh
