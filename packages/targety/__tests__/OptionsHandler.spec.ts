@@ -1,12 +1,12 @@
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
 
 import { OptionsHandler } from "../src/OptionsHandler";
-import { LambdaProxyEvent, Request } from "../src/Request";
-import { Route } from "../src/Route";
+import { LambdaProxyEvent, Request } from "../src";
+import { Route } from "../src";
 
 describe("OptionsHandler", () => {
-    let event;
-    let handlerAction;
+    let event: LambdaProxyEvent;
+    let handlerAction: Route;
 
     const optionsHandler = new OptionsHandler(
         ["localhost:3000"],
@@ -18,7 +18,7 @@ describe("OptionsHandler", () => {
     );
 
     beforeEach(() => {
-        event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+        event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
         event.httpMethod = "GET";
         event.resource = "/test-endpont/{id}";
 

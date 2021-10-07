@@ -1,3 +1,4 @@
 import * as ApiGateWayProxyEvent from "./ApiGatewayProxyEvent";
+import * as Event from "./EventStubs";
 
-export { ApiGateWayProxyEvent };
+export { ApiGateWayProxyEvent, Event };

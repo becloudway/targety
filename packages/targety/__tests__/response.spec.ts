@@ -11,13 +11,13 @@ import {
     ValidationError,
 } from "../src/errors";
 import { ContentType } from "../src/common/enums/ContentType";
-import { LambdaProxyEvent, Request } from "../src/Request";
-import { Response } from "../src/Response";
+import { LambdaProxyEvent, Request } from "../src";
+import { Response } from "../src";
 
 let request: Request;
 describe("Response", () => {
     beforeEach(() => {
-        request = new Request((ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent);
+        request = new Request(ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent);
     });
 
     describe("cookies", () => {
@@ -59,7 +59,7 @@ describe("Response", () => {
             it('returns cors header "access-control-allow-origin" with request origin', () => {
                 // @ts-ignore
                 process.env.ALLOWED_ORIGINS = "http://localhost:8000";
-                const { Response: ResponseWithCors } = require("../src/Response");
+                const { Response: ResponseWithCors } = require("../src");
                 // @ts-ignore
                 request.headers.origin = ["http://foreign/domain"];
                 const response = ResponseWithCors.ok(request).send({ success: "ok" });
@@ -69,7 +69,7 @@ describe("Response", () => {
                 // @ts-ignore
                 process.env.ALLOWED_ORIGINS = "http://localhost:8000,http://allowed/domain";
                 // @ts-ignore
-                const { Response: ResponseWithCors } = require("../src/Response");
+                const { Response: ResponseWithCors } = require("../src");
                 // @ts-ignore
                 request.headers.origin = ["http://allowed/domain"];
                 const response = ResponseWithCors.ok(request).send({ success: "ok" });

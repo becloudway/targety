@@ -3,7 +3,7 @@ import "reflect-metadata";
 
 import { ValidationClass, ValidatorOptions, plainToClass } from "../../validation";
 import { ValidationError } from "../../errors";
-import { Request } from "../../Request";
+import { Request } from "../../handlers/request/Request";
 import { RequestParams } from "../enums";
 import { LOGGER } from "../../logging";
 

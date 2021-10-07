@@ -3,32 +3,16 @@ import get from "lodash.get";
 import toString from "lodash.tostring";
 import * as querystring from "querystring";
 import URLParse from "url-parse";
-import { ContentType } from "./common/enums";
-import { HttpMethod } from "./common/types";
-import { Metadata } from "./Metadata";
+import { ContentType } from "../../common/enums";
+import { HttpMethod } from "../../common/types";
+import { GenericRequest, RequestType } from "../../GenericRequest";
+import { LambdaProxyEvent } from "./LambdaProxyEvent";
 
 export interface LambdaIdentity {
     accountId: string | null;
     sourceIp: string;
     userAgent: string | null;
     [key: string]: string | null | boolean;
-}
-
-export interface LambdaProxyEvent {
-    body: string | null;
-    headers: { [name: string]: string };
-    multiValueHeaders: { [name: string]: string[] };
-    httpMethod: HttpMethod;
-    path: string;
-    pathParameters: { [name: string]: string } | null;
-    queryStringParameters: { [name: string]: string } | null;
-    requestContext: {
-        identity: LambdaIdentity;
-        requestId: string;
-        stage: string;
-    };
-    resource: string;
-    [key: string]: any;
 }
 
 export interface Cookies {
@@ -40,7 +24,7 @@ export interface Cookies {
  *
  * @class Request
  */
-export class Request {
+export class Request extends GenericRequest {
     public isAuthenticated: boolean;
     private body: object | string;
     private token = new Map<string, string>();
@@ -62,13 +46,13 @@ export class Request {
     private origin: string;
     private requestId: string;
 
-    private _metadata: Metadata = new Metadata();
-
     /**
      * @param {LambdaProxyEvent} apiGateWayProxyEvent The event passed to the lambda function
      * with lambda-proxy type integration
      */
     constructor(apiGateWayProxyEvent: LambdaProxyEvent) {
+        super();
+
         /** Parsed and normalized headers */
         this.headers = this.parseHeaders(apiGateWayProxyEvent);
         this.contentType = this.getHeader("content-type") as ContentType;
@@ -370,14 +354,11 @@ export class Request {
         return this.requestId;
     }
 
-    /**
-     * Returns the metadata for the given request.
-     */
-    public get metadata(): Metadata {
-        return this._metadata;
-    }
-
     public setParams(input: Record<string, string>): void {
         this.params = input;
+    }
+
+    public getType(): RequestType {
+        return RequestType.REQUEST;
     }
 }

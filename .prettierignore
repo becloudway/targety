@@ -1,3 +1,4 @@
 *.md
 **/coverage/*
 templates/*
+docs

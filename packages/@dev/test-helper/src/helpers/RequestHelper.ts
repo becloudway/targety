@@ -8,7 +8,7 @@ import { ApiGateWayProxyEvent } from "../fixtures";
  * Returns a dummy event from the ApiGateWayProxyEvent classes
  */
 export const getDummyEvent = (input: ApiGateWayProxyEvent.ProxyEventInput): LambdaProxyEvent =>
-    (ApiGateWayProxyEvent.get(input) as unknown) as LambdaProxyEvent;
+    ApiGateWayProxyEvent.get(input) as unknown as LambdaProxyEvent;
 
 /**
  * Create an event object based on the input values

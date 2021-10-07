@@ -1,4 +1,4 @@
-import { ResponseBody } from "../src/ResponseBody";
+import { ResponseBody } from "../src";
 
 let responseBody: ResponseBody;
 describe("ResponseBody", () => {

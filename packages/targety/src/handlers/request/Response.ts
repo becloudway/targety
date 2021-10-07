@@ -8,16 +8,16 @@ import {
     NotFoundError,
     UnauthorizedError,
     ValidationError,
-} from "./errors";
-import { Strings } from "./utils";
+} from "../../errors";
+import { Strings } from "../../utils";
 import cookie from "cookie";
-import { ContentType } from "./common/enums/ContentType";
+import { ContentType } from "../../common/enums/ContentType";
 import { Request } from "./Request";
 import { ResponseBody, ResponseBodyInput } from "./ResponseBody";
 import yn from "yn";
 import { URL } from "url";
 
-const { API_VERSION, ALLOW_LOCALHOST } = process.env;
+const { ALLOW_LOCALHOST } = process.env;
 
 export interface ResponseOptions {
     cors?: boolean;
@@ -209,11 +209,11 @@ export class Response<T> {
         }
 
         if (typeof body !== "string") {
-            body = (JSON.stringify(body) as unknown) as string;
+            body = JSON.stringify(body) as unknown as string;
         }
 
         const responseBody = new ResponseBody({
-            body: (body as unknown) as string,
+            body: body as unknown as string,
             headers: this.headers,
             statusCode: this.status,
         });

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
-import { LambdaProxyEvent, Request } from "../src/Request";
+import { LambdaProxyEvent, Request } from "../src";
 
 describe("Request", () => {
     let event: LambdaProxyEvent;

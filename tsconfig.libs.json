@@ -4,7 +4,8 @@
         "declaration": true,
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
-        "declarationMap": true
+        "declarationMap": true,
+        "experimentalDecorators": true,
     },
     "extends": "./tsconfig.basic.json"
 }
