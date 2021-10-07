@@ -143,7 +143,7 @@ It can also be build using the `npm|yarn run docs` command in the `targety` pack
 
 ### Example
 
-The project contains an example in the [examples](https://github.com/becloudway/targety/tree/main/packages/examples) directory.
+The project contains an example in the [examples](https://github.com/SirMomster/targety-example) directory.
 This is a working example that can be deployed on AWS if desired.
 
 More examples might be added to further explain functionality.
