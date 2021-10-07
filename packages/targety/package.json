@@ -40,5 +40,6 @@
         "dotenv": "^8.1.0",
         "typedoc": "^0.21.4",
         "typescript": "^4.4.2"
-    }
+    },
+    "gitHead": "2559f81e690fb1c73397d6a6201ceec14cfd25fe"
 }
