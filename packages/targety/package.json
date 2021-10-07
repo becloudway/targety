@@ -1,6 +1,6 @@
 {
     "name": "targety",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "AWS routing library for AWS Lambda, routing straight to your target",
     "license": "MIT",
     "main": "lib/index.js",
@@ -12,9 +12,9 @@
     },
     "scripts": {
         "build": "rm -rf ./lib && tsc",
-        "test": "cd .. && npm run test",
+        "test": "jest",
         "docs": "typedoc ./src/index.ts --name targety --out ./docs",
-        "prepublishOnly": "npm run docs && npm install && yarn run build && npm prune --production"
+        "prepack": "yarn run test && yarn run build"
     },
     "directories": {
         "lib": "./lib"

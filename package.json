@@ -48,6 +48,7 @@
         "@babel/preset-es2016": "^7.0.0-beta.53",
         "@babel/preset-typescript": "^7.13.0",
         "@commitlint/config-conventional": "^11.0.0",
+        "@dev/test-helper": "^0.0.0",
         "@types/jest": "^25.2.3",
         "@typescript-eslint/eslint-plugin": "^2.25.0",
         "@typescript-eslint/parser": "^2.25.0",
@@ -63,14 +64,14 @@
         "husky": "^4.2.3",
         "jest": "^26.6.3",
         "js-yaml": "^3.13.1",
+        "lerna": "^4.0.0",
         "lint-staged": "^10.4.2",
         "prettier": "^2.0.2",
         "sonarqube-scanner": "^2.6.0",
         "ssm-cfg-manager": "1.0.0",
         "supertest": "^4.0.2",
         "ts-jest": "^26.4.0",
-        "typescript": "^3.8.3",
-        "@dev/test-helper": "^0.0.0"
+        "typescript": "^3.8.3"
     },
     "husky": {
         "hooks": {

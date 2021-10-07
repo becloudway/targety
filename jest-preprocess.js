@@ -1,5 +1,7 @@
+const path = require("path");
+
 const babelOptions = {
-    configFile: "./babel.config.js",
+    configFile: path.join(__dirname, "babel.config.js"),
 };
 
 module.exports = require("babel-jest").createTransformer(babelOptions);
