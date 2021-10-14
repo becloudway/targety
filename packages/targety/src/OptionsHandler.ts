@@ -1,8 +1,8 @@
-import { Request } from "./Request";
-import { ResponseBody } from "./ResponseBody";
+import { Request } from "./handlers/request/Request";
+import { ResponseBody } from "./handlers/request/ResponseBody";
 import { ForbiddenError } from "./errors";
 import { LOGGER } from "./logging";
-import { Route } from "./Route";
+import { Route } from "./handlers/request/Route";
 import { CorsMetaData } from "./common/decorators/Cors";
 
 /**

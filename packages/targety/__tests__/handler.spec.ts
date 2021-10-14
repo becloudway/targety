@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
 import "reflect-metadata";
-import { CORS, DefaultCORS, Get, LambdaProxyEvent, Request, ResponseBody } from "../src";
-import { Handler } from "../src/Handler";
-import { Middleware } from "../src/MiddlewareHandler";
+import { CORS, DefaultCORS, Get, Handler, LambdaProxyEvent, Middleware, Request, ResponseBody, S3 } from "../src";
 
-const getProfileStub = jest.fn();
+const getProfileStub = jest.fn().mockReturnValue({ test: "data" });
+const getS3Stub = jest.fn().mockReturnValue({ test: "data" });
 
 @DefaultCORS({ ExposedHeaders: [], AllowCredentials: true, AllowHeaders: ["x-api-key"] })
 class HandlerImplementation extends Handler {
-    protected middleware: Middleware[] = [];
+    public middleware: Middleware[] = [];
 
     @Get("/test-endpont/{id}")
     @CORS({ ExposedHeaders: ["x-test"] })
@@ -22,10 +22,15 @@ class HandlerImplementation extends Handler {
     public async rootPath(req: Request) {
         return getProfileStub(req);
     }
+
+    @S3("some-event")
+    public async handleS3Event(req: Request) {
+        return getS3Stub(req);
+    }
 }
 
 class UndefinedMiddlewareImplementation extends Handler {
-    protected middleware: Middleware[];
+    public middleware: Middleware[];
 
     @Get("/test-endpont/{id}")
     public async getProfile(req: Request) {
@@ -40,7 +45,7 @@ let request: any;
 describe("Handler", () => {
     beforeEach(() => {
         handlerImplementation = new HandlerImplementation();
-        event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+        event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
         event.httpMethod = "GET";
         event.resource = "/test-endpont/{id}";
         request = new Request(event);
@@ -73,7 +78,8 @@ describe("Handler", () => {
             expect(response.statusCode).toEqual(404);
         });
         it("invokes correct path", async () => {
-            await handlerImplementation.handle(request);
+            const result = await handlerImplementation.handle(request);
+            console.log(result);
             expect(getProfileStub).toHaveBeenCalledTimes(1);
             expect(getProfileStub).toHaveBeenCalledWith(request);
         });
@@ -84,7 +90,7 @@ describe("Handler", () => {
             expect(getProfileStub).toHaveBeenCalledWith(request);
         });
         it("invokes options", async () => {
-            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
             event.httpMethod = "OPTIONS";
             event.resource = "/test-endpont/{id}";
             request = new Request(event);
@@ -96,11 +102,7 @@ describe("Handler", () => {
             handlerImplementation.middleware.push(middlewareMock);
             const response = await handlerImplementation.handle(request);
             expect(middlewareMock).toHaveBeenCalledTimes(1);
-            expect(middlewareMock).toHaveBeenCalledWith(
-                request,
-                handlerImplementation.routes[0],
-                undefined,
-            );
+            expect(middlewareMock).toHaveBeenCalledWith(request, expect.anything(), undefined);
             expect(getProfileStub).toHaveBeenCalledTimes(1);
             expect(getProfileStub).toHaveBeenCalledWith(request);
         });
@@ -109,24 +111,19 @@ describe("Handler", () => {
             handlerImplementation.middleware.push(middlewareMock);
             const response = await handlerImplementation.handle(request);
             expect(middlewareMock).toHaveBeenCalledTimes(1);
-            expect(middlewareMock).toHaveBeenCalledWith(
-                request,
-                handlerImplementation.routes[0],
-                undefined,
-            );
+            expect(middlewareMock).toHaveBeenCalledWith(request, expect.anything(), undefined);
             expect(getProfileStub).not.toHaveBeenCalled();
             expect(response.statusCode).toEqual(406);
         });
     });
 
     describe("#ProxyPaths", () => {
-
         /**
          * Inconsistency issues on multiple runs
          */
-        for (let i = 0; i < 20; i ++) {
+        for (let i = 0; i < 20; i++) {
             it(`invokes proxy complex path, attempt #${i + 1}`, async () => {
-                event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+                event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
                 event.httpMethod = "GET";
                 event.resource = "/{proxy+}";
                 event.path = "/test-endpont/1234";
@@ -138,7 +135,7 @@ describe("Handler", () => {
         }
 
         it("invokes proxy root path", async () => {
-            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
             event.httpMethod = "GET";
             event.resource = "/{proxy+}";
             event.path = "/";
@@ -149,7 +146,7 @@ describe("Handler", () => {
         });
 
         it("invokes proxy test-endpoint path", async () => {
-            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
             event.httpMethod = "GET";
             event.resource = "/{proxy+}";
             event.path = "/test-endpont/1234";
@@ -160,7 +157,7 @@ describe("Handler", () => {
         });
 
         it("invokes nothing with a bogus path", async () => {
-            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
             event.httpMethod = "GET";
             event.resource = "/{proxy+}";
             event.path = "/test-endpont/pizza/test123";
@@ -170,7 +167,7 @@ describe("Handler", () => {
         });
 
         it("invokes nothing with a path that does not exist", async () => {
-            event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+            event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
             event.httpMethod = "GET";
             event.resource = "/{proxy+}";
             event.path = "/test-endpont";
@@ -178,5 +175,5 @@ describe("Handler", () => {
             await handlerImplementation.handle(request);
             expect(getProfileStub).not.toHaveBeenCalled();
         });
-    })
+    });
 });

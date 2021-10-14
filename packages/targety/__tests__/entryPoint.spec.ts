@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
-import { BadRequestError } from "../src/errors";
-import { Handler, LambdaProxyEvent, Middleware, Request } from "../src";
-import { LambdaEntryPoint } from "../src/EntryPoint";
-
+import {
+    Error,
+    LambdaEntryPoint,
+    Context,
+    GenericEvent,
+    Handler,
+    LambdaProxyEvent,
+    Middleware,
+    Request,
+    ResponseBody,
+} from "../src";
 class HandlerImplementation extends Handler {
-    protected middleware: Middleware[];
+    public middleware: Middleware[];
 }
 
 // tslint:disable-next-line:max-classes-per-file
@@ -16,16 +23,14 @@ class EntryPointImplementation extends LambdaEntryPoint {
 }
 
 const handleMock = jest.fn();
-let event;
-let implementation;
-let context;
-
-jest.mock("../src/Request");
+let event: LambdaProxyEvent | GenericEvent<unknown>;
+let implementation: EntryPointImplementation;
+let context: any;
 
 describe("EntryPoint", () => {
     beforeEach(() => {
         context = {};
-        event = (ApiGateWayProxyEvent.get() as unknown) as LambdaProxyEvent;
+        event = ApiGateWayProxyEvent.get() as unknown as LambdaProxyEvent;
         event.httpMethod = "GET";
         event.resource = "/test-endpont/{id}";
         implementation = new EntryPointImplementation();
@@ -47,28 +52,16 @@ describe("EntryPoint", () => {
         expect(response).toEqual("OK");
     });
 
-    it("invokes the handle function of the controller with a request object and return handle function result as is", async () => {
-        handleMock.mockResolvedValue("OK");
-        const response = await implementation.handle(event);
-        expect(HandlerImplementation.prototype.handle).toHaveBeenCalledTimes(1);
-        expect(HandlerImplementation.prototype.handle).toHaveBeenCalledWith(expect.any(Request), undefined);
-        expect(response).toEqual("OK");
-    });
-
     it("invokes the heartbeat function when no event is passed and returns 204", async () => {
-        const response = await implementation.handle({}, {});
+        const response = (await implementation.handle({}, {} as Context)) as ResponseBody;
         expect(context.callbackWaitsForEmptyEventLoop).toBeFalsy();
         expect(HandlerImplementation.prototype.handle).not.toHaveBeenCalled();
         expect(response.statusCode).toEqual(204);
     });
 
     it("returns errorResponse when handler throws", async () => {
-        // @ts-ignore
-        Request.prototype.getHeader.mockReturnValue("https://example.com");
-        // @ts-ignore
-        Request.prototype.getOrigin.mockReturnValue("https://localhost");
-        handleMock.mockRejectedValue(new BadRequestError("Oops"));
-        const response = await implementation.handle(event, {});
+        handleMock.mockRejectedValue(new Error.BadRequestError("Oops"));
+        const response = (await implementation.handle(event, {} as Context)) as ResponseBody;
         expect(HandlerImplementation.prototype.handle).toHaveBeenCalledTimes(1);
         expect(HandlerImplementation.prototype.handle).toHaveBeenCalledWith(expect.any(Request), {
             callbackWaitsForEmptyEventLoop: false,
@@ -81,12 +74,8 @@ describe("EntryPoint", () => {
         EntryPointImplementation.prototype.initializeHandler = async () => {
             throw new Error("OOPS");
         };
-        // @ts-ignore
-        Request.prototype.getHeader.mockReturnValue("https://example.com");
-        // @ts-ignore
-        Request.prototype.getOrigin.mockReturnValue("https://localhost");
         implementation = new EntryPointImplementation();
-        const response = await implementation.handle(event, {});
+        const response = (await implementation.handle(event, {} as Context)) as ResponseBody;
         expect(HandlerImplementation.prototype.handle).not.toHaveBeenCalled();
         expect(response.statusCode).toEqual(500);
     });

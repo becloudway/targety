@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-/* tslint:disable:max-classes-per-file */
-
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
-import { IsNumber, IsString, validate, ValidationClass, ValidationError, ValidatorOptions } from "../../src/validation";
+import { IsNumber, IsString, ValidationClass } from "../../src/validation";
 import { ValidationError as ApiValidationError } from "../../src/errors";
-import { RequestValidationOptions, ValidateBody } from "../../src/common/decorators";
-import { LambdaProxyEvent, Request } from "../../src/Request";
+import { ValidateBody, Request } from "../../src";
 
 class Body extends ValidationClass {
     @IsString()

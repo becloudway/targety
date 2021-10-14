@@ -1,26 +1,24 @@
 import "reflect-metadata";
 
 import { ROUTES_METADATA } from "../Constants";
-import { ResponseBody } from "../../ResponseBody";
-import { Request } from "../../Request";
+import { ResponseBody } from "../../handlers/request/ResponseBody";
 import { Handler } from "../../Handler";
+import { GenericRequest } from "../../GenericRequest";
 
 /**
  * Method to call a function on the class implementing a CustomErrorHandler
  */
-export const callSelf = (f: string) => async (
-    request: Request,
-    handler: Handler,
-    error: any,
-): Promise<ResponseBody> => {
-    return await handler[f](request, error);
-};
+export const callSelf =
+    (f: string) =>
+    async (request: GenericRequest, handler: Handler, error: any): Promise<ResponseBody> => {
+        return await handler[f](request, error);
+    };
 
 /**
  * Type defining the HandlerFN for the CustomErrorHandler
  */
 export type CustomErrorHandlerType<T extends Handler> = (
-    request: Request,
+    request: GenericRequest,
     handler: T,
     error: any,
 ) => Promise<ResponseBody>;

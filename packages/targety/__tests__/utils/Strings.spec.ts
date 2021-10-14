@@ -33,9 +33,7 @@ describe("utils#Strings", () => {
             expect(Strings.encode<string>("test")).toEqual("dGVzdA==");
         });
         it("should encode an object", () => {
-            expect(
-                Strings.encode<unknown>({ pizza: "test" }),
-            ).toEqual("eyJwaXp6YSI6InRlc3QifQ==");
+            expect(Strings.encode<unknown>({ pizza: "test" })).toEqual("eyJwaXp6YSI6InRlc3QifQ==");
         });
         it("should return an empty string when there is nothing to encode", () => {
             expect(Strings.encode<unknown>(undefined)).toEqual("");

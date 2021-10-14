@@ -17,6 +17,7 @@ module.exports = {
                 loose: true,
             },
         ],
+        ["@babel/plugin-proposal-private-methods", { loose: true }],
         "@babel/plugin-proposal-json-strings",
         "@babel/plugin-proposal-export-namespace-from",
         "@babel/plugin-proposal-numeric-separator",

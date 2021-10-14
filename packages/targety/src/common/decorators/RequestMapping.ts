@@ -25,8 +25,10 @@ export const RequestMapping = (config: RequestMappingConfig = defaultRequestConf
     };
 };
 
-const createMappingDecorator = (method: RequestMethod) => (path?: string | string[]): MethodDecorator =>
-    RequestMapping({ [PATH]: path, [METHOD]: method });
+const createMappingDecorator =
+    (method: RequestMethod) =>
+    (path?: string): MethodDecorator =>
+        RequestMapping({ [PATH]: path, [METHOD]: method });
 
 export const Get = createMappingDecorator(RequestMethod.GET);
 export const Post = createMappingDecorator(RequestMethod.POST);

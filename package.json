@@ -75,9 +75,7 @@
     },
     "husky": {
         "hooks": {
-            "commit-msg": "exec < /dev/tty && git cz --hook || true && commitlint -e",
-            "pre-commit": "lint-staged",
-            "post-merge": "node ./scripts/compile-typescript.js modules"
+            "pre-commit": "lint-staged"
         }
     },
     "lint-staged": {

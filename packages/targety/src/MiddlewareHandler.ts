@@ -1,22 +1,27 @@
-import { ResponseBody } from ".";
-import { Request } from "./Request";
+import { ResponseBody } from "./handlers/request/ResponseBody";
 import { Promises } from "./utils";
 import { ApiError } from "./errors";
 import { Context } from "./common/interfaces";
-import { Route } from "./Route";
+import { Route } from "./handlers/request/Route";
+import { Event } from "./handlers/event/Event";
+import { GenericRequest } from "./GenericRequest";
 
 /**
  * Definition of an middleware
  */
-export type Middleware = (request: Request, action: Route, context?: Context) => Promise<MiddlewareResponse>;
+export type Middleware = (
+    request: GenericRequest,
+    action: Route | Event,
+    context?: Context,
+) => Promise<MiddlewareResponse>;
 /**
  * The return type for middleware that define a follow up object
  *
  * Can be used when fi. you need to discard something after the request has completed or failed
  */
 export type MiddlewareFollowUp = {
-    onError: (request: Request, error: ApiError | Error) => Promise<void>;
-    onSuccess: (request: Request, response: ResponseBody) => Promise<ResponseBody>;
+    onError: (request: GenericRequest, error: ApiError | Error) => Promise<void>;
+    onSuccess: (request: GenericRequest, response: ResponseBody) => Promise<ResponseBody>;
 };
 /**
  * The the expected responses of functions that are used as middleware
@@ -45,7 +50,7 @@ export class MiddlewareHandler {
     private middlewareResponses: MiddlewareResponse[] = [];
     private middlewareFollowUps: MiddlewareFollowUp[] = [];
 
-    public constructor(private route: Route, private middleware: Middleware[] = []) {}
+    public constructor(private route: Route | Event, private middleware: Middleware[] = []) {}
 
     /**
      * Handles an incoming request and runs the defined middleware against it.
@@ -60,7 +65,7 @@ export class MiddlewareHandler {
      * @param request the incoming AWS API Gateway request
      * @param context the context of the execution environment
      */
-    public async handle(request: Request, context: Context): Promise<ResponseBody | void> {
+    public async handle(request: GenericRequest, context: Context): Promise<ResponseBody | void> {
         /**
          * Run all the middleware and catch errors and responses so that they can be verified
          * Stops resolving the chain after the first error occurred
@@ -101,7 +106,7 @@ export class MiddlewareHandler {
      * @param request the AWS API Gateway request
      * @param response the response to be send back to the user
      */
-    public async handleSuccessFollowUps(request: Request, response: ResponseBody): Promise<ResponseBody> {
+    public async handleSuccessFollowUps(request: GenericRequest, response: ResponseBody): Promise<ResponseBody> {
         const result: Array<ResponseBody> = await Promises.resolvePromiseChain(
             this.middlewareFollowUps.map(
                 (followUp: MiddlewareFollowUp) => async () => await followUp.onSuccess(request, response),
@@ -117,7 +122,7 @@ export class MiddlewareHandler {
      * @param request the AWS API Gateway request
      * @param error the error thrown by the executed code
      */
-    public async handleFailureFollowUps(request: Request, error: ApiError | Error): Promise<void> {
+    public async handleFailureFollowUps(request: GenericRequest, error: ApiError | Error): Promise<void> {
         return await Promises.resolvePromiseChain(
             this.middlewareFollowUps.map(
                 (followUp: MiddlewareFollowUp) => async () => await followUp.onError(request, error),

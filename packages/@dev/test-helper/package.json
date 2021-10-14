@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "description": "> TODO: description",
     "homepage": "",
-    "private": "true",
+    "private": true,
     "license": "ISC",
     "main": "lib/index.js",
     "directories": {

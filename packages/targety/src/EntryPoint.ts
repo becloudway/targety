@@ -2,9 +2,15 @@ import { LOGGER } from "./logging";
 import { Objects } from "./utils";
 import { Context } from "./common/interfaces";
 import { Handler } from "./Handler";
-import { LambdaProxyEvent, Request } from "./Request";
-import { Response } from "./Response";
-import { ResponseBody } from "./ResponseBody";
+import { Request } from "./handlers/request/Request";
+import { LambdaProxyEvent } from "./handlers/request/LambdaProxyEvent";
+import { Response } from "./handlers/request/Response";
+import { ResponseBody } from "./handlers/request/ResponseBody";
+import { GenericEvent } from "./handlers/event/GenericEvent";
+import { GenericRequest, RequestType } from "./GenericRequest";
+import { EventRequest } from "./handlers/event/EventRequest";
+import { APIGatewayRequestAuthorizerEvent } from "aws-lambda";
+import { LambdaAuthorizerRequest } from "./handlers/auth/LambdaAuthorizerRequest";
 
 /**
  * Represents the LambdaEntryPoint abstract class
@@ -31,28 +37,36 @@ export abstract class LambdaEntryPoint {
     /**
      * Entrypoint for the Api Gateway Proxy event.
      */
-    public async handle(event: LambdaProxyEvent, context: Context): Promise<ResponseBody> {
-        let request: Request;
+    public async handle(
+        event: LambdaProxyEvent | GenericEvent<unknown> | APIGatewayRequestAuthorizerEvent | {},
+        context?: Context,
+    ): Promise<unknown> {
+        let finalRequest: GenericRequest;
         LOGGER.debug("Lambda Event %j, Context %j", event, context);
 
-        // Makes sure that the response is sent straight away when callback is invoked
-        // instead of waiting for the nodejs event loop to be empty. This is best practice
-        // for nodeJS lambdas on AWS
-        // See https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-context.html
         if (context) {
             context.callbackWaitsForEmptyEventLoop = false;
         }
 
         try {
-            request = new Request(event);
-
-            if (Objects.isEmpty(event)) {
-                return LambdaEntryPoint.heartBeatResponse(request);
+            if ((event as GenericEvent<unknown>).Records) {
+                finalRequest = new EventRequest<GenericEvent<unknown>>(event as GenericEvent<unknown>);
+            } else if ((event as APIGatewayRequestAuthorizerEvent).type === "REQUEST") {
+                finalRequest = new LambdaAuthorizerRequest(event as APIGatewayRequestAuthorizerEvent);
+            } else {
+                const request = new Request(event as LambdaProxyEvent);
+                finalRequest = request;
+                if (Objects.isEmpty(event)) {
+                    return LambdaEntryPoint.heartBeatResponse(request);
+                }
             }
-            return await this.handleRequest(request, context);
+            return await this.handleRequest(finalRequest, context);
         } catch (e) {
-            LOGGER.error(e, "Error handling request");
-            return Response.fromError(request, e);
+            if (finalRequest.isType(RequestType.REQUEST)) {
+                LOGGER.error(e, "Error handling request");
+                return Response.fromError(finalRequest as Request, e);
+            }
+            throw e;
         }
     }
 
@@ -62,7 +76,7 @@ export abstract class LambdaEntryPoint {
      */
     protected abstract initializeHandler(): Promise<Handler>;
 
-    private async handleRequest(request: Request, context: Context): Promise<ResponseBody> {
+    private async handleRequest(request: GenericRequest, context: Context): Promise<unknown> {
         if (!this.handler) {
             this.handler = await this.initPromise;
         }
