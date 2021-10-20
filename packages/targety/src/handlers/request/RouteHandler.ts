@@ -73,10 +73,10 @@ export class RouteHandler implements HandlerStrategy<Request, Route | ResponseBo
             return (await middleWareHandler.handleSuccessFollowUps(request, result)) || result;
         } catch (e) {
             // Allows the route itself to handle errors in their own way when required
-            await middleWareHandler?.handleFailureFollowUps(request, e);
+            const followUpResult = await middleWareHandler?.handleFailureFollowUps(request, e);
             const customErrorResponse = customErrorHandler && (await customErrorHandler(request, this.parent, e));
 
-            const finalError = customErrorResponse || Response.fromError(request as Request, e);
+            const finalError = customErrorResponse || followUpResult || Response.fromError(request as Request, e);
 
             // only log stacks for internal server errors as an error
             finalError.statusCode === InternalServerError.STATUS_CODE

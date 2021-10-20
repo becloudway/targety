@@ -20,7 +20,7 @@ export type Middleware = (
  * Can be used when fi. you need to discard something after the request has completed or failed
  */
 export type MiddlewareFollowUp = {
-    onError: (request: GenericRequest, error: ApiError | Error) => Promise<void>;
+    onError: (request: GenericRequest, error: ApiError | Error) => Promise<ResponseBody | undefined>;
     onSuccess: (request: GenericRequest, response: ResponseBody) => Promise<ResponseBody>;
 };
 /**
@@ -122,11 +122,16 @@ export class MiddlewareHandler {
      * @param request the AWS API Gateway request
      * @param error the error thrown by the executed code
      */
-    public async handleFailureFollowUps(request: GenericRequest, error: ApiError | Error): Promise<void> {
-        return await Promises.resolvePromiseChain(
+    public async handleFailureFollowUps(
+        request: GenericRequest,
+        error: ApiError | Error,
+    ): Promise<ResponseBody | undefined> {
+        const result = await Promises.resolvePromiseChain<ResponseBody>(
             this.middlewareFollowUps.map(
                 (followUp: MiddlewareFollowUp) => async () => await followUp.onError(request, error),
             ),
-        );
+        ).filter((v) => v !== undefined);
+
+        return result.pop();
     }
 }
