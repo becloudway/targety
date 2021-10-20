@@ -1,6 +1,6 @@
 {
     "name": "targety",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "description": "AWS routing library for AWS Lambda, routing straight to your target",
     "license": "MIT",
     "main": "lib/index.js",
