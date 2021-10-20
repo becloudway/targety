@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Handler #handle invokes correct path 1`] = `
+ResponseBody {
+  "body": "{\\"hidden\\":\\"The error is now hidden\\"}",
+  "multiValueHeaders": Object {
+    "access-control-allow-credentials": Array [
+      "true",
+    ],
+    "access-control-allow-origin": Array [
+      "http://localhost:3000",
+    ],
+    "cache-control": Array [
+      "no-store",
+    ],
+    "content-security-policy": Array [
+      "'self'",
+    ],
+    "content-type": Array [
+      "application/json",
+    ],
+    "strict-transport-security": Array [
+      "max-age=31536000",
+    ],
+    "x-aws-request-id": Array [
+      "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    ],
+    "x-content-type-options": Array [
+      "nosniff",
+    ],
+    "x-frame-options": Array [
+      "DENY",
+    ],
+  },
+  "statusCode": 403,
+}
+`;

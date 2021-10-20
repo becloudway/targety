@@ -130,8 +130,8 @@ export class MiddlewareHandler {
             this.middlewareFollowUps.map(
                 (followUp: MiddlewareFollowUp) => async () => await followUp.onError(request, error),
             ),
-        ).filter((v) => v !== undefined);
+        );
 
-        return result.pop();
+        return result.filter((v) => v !== undefined).pop();
     }
 }
