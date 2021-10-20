@@ -80,3 +80,6 @@ public-key
 .history/
 
 package-lock.json
+
+_build
+packages/targety/docs/**

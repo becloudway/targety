@@ -1,10 +1,12 @@
 # Introduction
 
+In this section you will get started and setup your own Targety project.
+
 ```{eval-rst}
 .. toctree::
    :maxdepth: 2
    :glob:
 
-   ./test.md
+   ./pages/getting_started.md
 ```
 
