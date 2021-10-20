@@ -48,7 +48,7 @@
         "@babel/preset-es2016": "^7.0.0-beta.53",
         "@babel/preset-typescript": "^7.13.0",
         "@commitlint/config-conventional": "^11.0.0",
-        "@dev/test-helper": "^0.0.0",
+        "@dev/test-helper": "^0.0.1",
         "@types/jest": "^25.2.3",
         "@typescript-eslint/eslint-plugin": "^2.25.0",
         "@typescript-eslint/parser": "^2.25.0",
