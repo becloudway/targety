@@ -138,8 +138,11 @@ Other interesting and relevant links.
 
 ### Docs
 
-The project contains a [docs](https://github.com/becloudway/targety/tree/main/packages/targety/docs) folder that contains the documentation of the current version.
-It can also be build using the `npm|yarn run docs` command in the `targety` package folder.
+Docs for the latest build can be found here:
+- [API Docs](https://mitchanical.io/prov/targety/api)
+- [Written Docs](https://mitchanical.io/prov/targety/docs)
+
+Written docs contain additional details on usage, examples, ...
 
 ### Example
 
