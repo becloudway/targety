@@ -1,6 +1,6 @@
 {
     "name": "targety-logger",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "The logging module for targety",
     "main": "lib/index.js",
     "scripts": {
@@ -8,8 +8,8 @@
         "test": "jest"
     },
     "dependencies": {
-        "pino": "^6.13.0",
-        "@types/pino": "^6.3.12"
+        "@types/pino": "^6.3.12",
+        "pino": "^6.13.0"
     },
     "author": "Mitch Mommers",
     "license": "MIT"
