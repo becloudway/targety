@@ -23,7 +23,6 @@ jobs:
             cache: 'npm'
         - run: npm i -g yarn
         - run: yarn
-        - run: yarn workspace targety run build
-        - run: yarn workspace @dev/test-helper run build
+        - run: npx lerna run build
         - run: yarn test
 

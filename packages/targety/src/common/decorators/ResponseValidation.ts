@@ -4,7 +4,7 @@ import "reflect-metadata";
 import { ValidationClass, ValidatorOptions } from "../../validation";
 import { ValidationError, InternalServerError } from "../../errors";
 import { Request } from "../../handlers/request/Request";
-import { LOGGER } from "../../logging";
+import { LOGGER } from "targety-logger";
 
 export const ResponseValidation = (
     Klass: new () => ValidationClass,

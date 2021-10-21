@@ -8,7 +8,7 @@ import { EventRequest } from "./EventRequest";
 import { AbstractEventStrategy, EventStrategy } from "../../events";
 import { GenericEvent, GenericEventBody } from "./GenericEvent";
 import { HandlerStrategy } from "../../HandlerStrategy";
-import { LOGGER } from "../../logging";
+import { LOGGER } from "targety-logger";
 
 export class EventHandler implements HandlerStrategy<EventRequest<unknown>, Event> {
     protected events: Event[] = [];

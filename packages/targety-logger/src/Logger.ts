@@ -11,7 +11,13 @@ const logLevel = getLogLevel();
 
 const logger = Logger({
     level: logLevel,
-    name: "APP",
+    name: "DEFAULT",
 });
 
 export const LOGGER: Logger.Logger = logger;
+export const createLogger = (name: string, options: Logger.LoggerOptions): Logger.Logger =>
+    Logger({
+        level: logLevel,
+        name,
+        ...options,
+    });

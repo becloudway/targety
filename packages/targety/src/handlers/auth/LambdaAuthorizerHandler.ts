@@ -7,7 +7,7 @@ import { InternalServerError } from "../../errors";
 import { Handler } from "../../Handler";
 import { HandlerStrategy } from "../../HandlerStrategy";
 import { LambdaAuthorizerRequest } from "./LambdaAuthorizerRequest";
-import { LOGGER } from "../../logging";
+import { LOGGER } from "targety-logger";
 
 export class LambdaAuthorizerHandler implements HandlerStrategy<LambdaAuthorizerRequest, AuthResponse> {
     protected authorizer: Authorizer;

@@ -1,4 +1,4 @@
-import { LOGGER } from "./logging";
+import { LOGGER } from "targety-logger";
 import { Objects } from "./utils";
 import { Context } from "./common/interfaces";
 import { Handler } from "./Handler";

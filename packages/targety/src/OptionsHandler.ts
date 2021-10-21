@@ -1,7 +1,7 @@
 import { Request } from "./handlers/request/Request";
 import { ResponseBody } from "./handlers/request/ResponseBody";
 import { ForbiddenError } from "./errors";
-import { LOGGER } from "./logging";
+import { LOGGER } from "targety-logger";
 import { Route } from "./handlers/request/Route";
 import { CorsMetaData } from "./common/decorators/Cors";
 

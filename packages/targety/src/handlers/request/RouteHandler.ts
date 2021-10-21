@@ -4,7 +4,7 @@ import { CustomerErrorHandlerMetaData } from "../../common/decorators/CustomerEr
 import { Context } from "../../common/interfaces";
 import { InternalServerError, NotFoundError } from "../../errors";
 import { HandlerStrategy } from "../../HandlerStrategy";
-import { LOGGER } from "../../logging";
+import { LOGGER } from "targety-logger";
 import { MiddlewareHandler } from "../../MiddlewareHandler";
 import { OptionsHandler } from "../../OptionsHandler";
 import { PathResolver } from "../../PathResolver";

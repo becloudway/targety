@@ -5,7 +5,7 @@ import { ValidationClass, ValidatorOptions, plainToClass } from "../../validatio
 import { ValidationError } from "../../errors";
 import { Request } from "../../handlers/request/Request";
 import { RequestParams } from "../enums";
-import { LOGGER } from "../../logging";
+import { LOGGER } from "targety-logger";
 
 const getValidationObject = (request: Request, paramType: RequestParams): object => {
     switch (paramType) {

@@ -12,20 +12,19 @@
     },
     "scripts": {
         "build": "rm -rf ./lib && tsc",
-        "test": "jest",
-        "prepack": "yarn run test && yarn run build"
+        "test": "jest"
     },
     "directories": {
         "lib": "./lib"
     },
     "dependencies": {
+        "targety-logger": "^0.0.0",
         "aws-lambda": "^1.0.6",
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",
         "cookie": "^0.4.0",
         "lodash.get": "^4.4.2",
         "lodash.tostring": "^4.1.4",
-        "pino": "^6.13.0",
         "reflect-metadata": "^0.1.13",
         "url-parse": "^1.4.7",
         "yn": "^4.0.0"

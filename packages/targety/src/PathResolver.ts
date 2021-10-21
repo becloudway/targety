@@ -1,5 +1,5 @@
 import { HttpMethod } from "./common/types";
-import { LOGGER } from "./logging";
+import { LOGGER } from "targety-logger";
 import { Request } from "./handlers/request/Request";
 import { Route } from "./handlers/request/Route";
 import { Strings } from "./utils";
