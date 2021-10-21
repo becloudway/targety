@@ -10,6 +10,9 @@
     "dependencies": {
         "pino": "^6.13.0"
     },
+    "devDependencies": {
+        "@types/pino": "^6.3.12"
+    },
     "author": "Mitch Mommers",
     "license": "MIT"
 }
