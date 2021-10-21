@@ -8,9 +8,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "pino": "^6.13.0"
-    },
-    "devDependencies": {
+        "pino": "^6.13.0",
         "@types/pino": "^6.3.12"
     },
     "author": "Mitch Mommers",
