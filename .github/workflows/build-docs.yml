@@ -1,0 +1,33 @@
+name: Publish Docs
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ftp_user: '${{ secrets.ftp_user }}'
+      ftp_host: '${{ secrets.ftp_host }}'
+      ftp_password: '${{ secrets.ftp_password }}'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'npm'
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+          python-version: 3.x
+      - run: npm i -g yarn
+      - run: yarn
+      - run: yarn lerna run build
+      - run: pip install myst_parser
+      - run: pip install sphinx_rtd_theme
+      - run: pip install sphinx
+      - run: bash -c ./deploy-docs.sh

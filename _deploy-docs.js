@@ -26,8 +26,6 @@ const uploadDocs = async () => {
             host: ftp_host,
         });
 
-        await client.cd("./domains/mitchanical.io/public_html/prov/targety");
-
         await uploadApiSpec(client);
         await client.cdup();
         await uploadWrittenDocs(client);
