@@ -23,6 +23,6 @@ jobs:
             cache: 'npm'
         - run: npm i -g yarn
         - run: yarn
-        - run: npx lerna run build
+        - run: npx lerna run build --concurrency 1
         - run: yarn test
 
