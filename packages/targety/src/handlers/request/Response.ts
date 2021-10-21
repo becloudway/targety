@@ -1,14 +1,5 @@
 /* tslint:disable:object-literal-sort-keys */
-import {
-    ApiError,
-    BadRequestError,
-    ConflictError,
-    ForbiddenError,
-    InternalServerError,
-    NotFoundError,
-    UnauthorizedError,
-    ValidationError,
-} from "../../errors";
+import { ApiError } from "../../errors";
 import { Strings } from "../../utils";
 import cookie from "cookie";
 import { ContentType } from "../../common/enums/ContentType";
@@ -36,6 +27,39 @@ export interface CookieOptions {
 interface JsonObject {
     [key: string]: any;
 }
+
+export interface ErrorBody {
+    message: string;
+    errorCode: string;
+    awsRequestId?: string;
+    [k: string]: unknown;
+}
+
+const requestErrorConverter =
+    (request: Request) =>
+    (err: ApiError | Error, defaultMessage?: string): ApiError | Error | ErrorBody => {
+        const apiError = !!(err as ApiError).metadataToJson;
+        const errorMessage = err.message || defaultMessage;
+
+        if (apiError) {
+            return {
+                message: errorMessage,
+                errorCode: (err as ApiError).errorCode,
+                awsRequestId: request.getRequestId(),
+                ...(err as ApiError).metadataToJson(),
+            };
+        }
+
+        if (errorMessage) {
+            return {
+                message: errorMessage,
+                errorCode: (err as ApiError).errorCode,
+                awsRequestId: request.getRequestId(),
+            };
+        }
+
+        return err;
+    };
 
 /**
  * Wrapper for ApiGateway Response
@@ -132,43 +156,14 @@ export class Response<T> {
         return Response.response<JsonObject>(403, request, options);
     }
 
+    public static custom(statusCode: number, request: Request, options?: ResponseOptions): Response<JsonObject> {
+        return Response.response<JsonObject>(statusCode, request, options);
+    }
+
     public static fromError(request: Request, error: ApiError | Error, options?: ResponseOptions): ResponseBody {
-        const convertError = (err: ApiError | Error, defaultMessage?: string) => {
-            const errorMessage = err.message || defaultMessage;
-            return errorMessage
-                ? {
-                      message: errorMessage,
-                      errorCode: (err as ApiError).errorCode,
-                      awsRequestId: request.getRequestId(),
-                  }
-                : err;
-        };
+        const convertError = requestErrorConverter(request);
 
-        if (error instanceof InternalServerError) {
-            return Response.internalServerError(request, options).send(convertError(error));
-        }
-
-        if (error instanceof ConflictError) {
-            return Response.conflict(request, options).send(convertError(error));
-        }
-
-        if (error instanceof NotFoundError) {
-            return Response.notFound(request, options).send(convertError(error));
-        }
-
-        if (error instanceof UnauthorizedError) {
-            return Response.unauthorized(request, options).send(convertError(error));
-        }
-
-        if (error instanceof BadRequestError) {
-            return Response.badRequest(request, options).send(convertError(error));
-        }
-
-        if (error instanceof ForbiddenError) {
-            return Response.forbidden(request, options).send(convertError(error, "Forbidden"));
-        }
-
-        if (error instanceof ValidationError) {
+        if (error.name === "ValidationError") {
             return Response.badRequest(request, options).send({
                 message: "Validation error",
                 errorCode: "ValidationError",
@@ -177,7 +172,7 @@ export class Response<T> {
             });
         }
 
-        return Response.internalServerError(request, options).send(convertError(error));
+        return Response.custom((error as ApiError).statusCode || 500, request, options).send(convertError(error));
     }
 
     private static corsResponse(request: Request, allowedOrigins: string[]): string {

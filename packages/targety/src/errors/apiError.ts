@@ -21,6 +21,8 @@ export class ApiError extends Error {
     public errorCode: ErrorCode;
     public statusCode: number;
 
+    public metadata = new Map<string, unknown>();
+
     public static STATUS_CODE: number;
 
     constructor(message: string, statusCode: number, errorCode: ErrorCode) {
@@ -28,5 +30,9 @@ export class ApiError extends Error {
         this.statusCode = statusCode;
         this.errorCode = errorCode;
         this.name = "ApiError";
+    }
+
+    public metadataToJson(): Record<string, unknown> {
+        return Object.fromEntries(this.metadata);
     }
 }
