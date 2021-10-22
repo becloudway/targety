@@ -12,5 +12,6 @@
         "pino": "^6.13.0"
     },
     "author": "Mitch Mommers",
-    "license": "MIT"
+    "license": "MIT",
+    "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
 }
