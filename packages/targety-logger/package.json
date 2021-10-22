@@ -11,6 +11,9 @@
         "@types/pino": "^6.3.12",
         "pino": "^6.13.0"
     },
+    "devDependencies": {
+        "@dev/test-helper": "^0.0.4"
+    },
     "author": "Mitch Mommers",
     "license": "MIT",
     "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
