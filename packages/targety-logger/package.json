@@ -1,6 +1,6 @@
 {
     "name": "targety-logger",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "The logging module for targety",
     "main": "lib/index.js",
     "scripts": {
