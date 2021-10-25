@@ -1,16 +1,4 @@
-/**
- * ErrorCode is a string representation of the type of error
- */
-export enum ErrorCode {
-    // DEFAULT ERROR CODES
-    BadRequest = "BadRequest",
-    Conflict = "Conflict",
-    Forbidden = "Forbidden",
-    InternalServerError = "InternalServerError",
-    NotFound = "NotFound",
-    Unauthorized = "Unauthorized",
-    ValidationError = "ValidationError",
-}
+import { ErrorCode } from "./ErrorCode";
 
 /**
  * ApiError Class

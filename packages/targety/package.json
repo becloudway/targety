@@ -25,6 +25,7 @@
         "lodash.tostring": "^4.1.4",
         "reflect-metadata": "^0.1.13",
         "targety-logger": "^0.0.5",
+        "targety-errors": "^0.0.0",
         "url-parse": "^1.4.7",
         "yn": "^4.0.0"
     },

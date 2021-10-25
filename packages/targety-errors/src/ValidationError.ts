@@ -1,4 +1,5 @@
-import { ApiError, ErrorCode } from "./apiError";
+import { ApiError } from "./ApiError";
+import { ErrorCode } from "./ErrorCode";
 
 export class ValidationError extends ApiError {
     public static STATUS_CODE = 400;
