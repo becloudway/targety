@@ -1,0 +1,16 @@
+{
+    "name": "targety-errors",
+    "version": "0.0.0",
+    "description": "The errors module for targety",
+    "main": "lib/index.js",
+    "scripts": {
+        "build": "rm -rf ./lib && tsc",
+        "test": "jest"
+    },
+    "devDependencies": {
+        "@dev/test-helper": "^0.0.5"
+    },
+    "author": "Mitch Mommers",
+    "license": "MIT",
+    "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
+}

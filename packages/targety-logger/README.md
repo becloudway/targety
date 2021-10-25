@@ -6,4 +6,4 @@ without the need to include the Targety if they just want to use the same logger
 ## Further reading
 
 - [Pino Github Page](https://github.com/pinojs/pino)
-- [Targety Logger How To Page](https://mitchanical.io/prov/targety/docs/how_to/pages/targety-logger.html)
+- [Targety Logger How To Page](https://mitchanical.io/prov/targety/docs/how_to/pages/logger.html)

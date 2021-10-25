@@ -8,7 +8,7 @@ import {
     NotFoundError,
     UnauthorizedError,
     ValidationError,
-} from "../../src/errors";
+} from "../src";
 
 describe("./errors", () => {
     describe("#ApiError", () => {
