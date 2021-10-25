@@ -14,7 +14,7 @@ describe("./errors", () => {
     describe("#ApiError", () => {
         const errorMessage = "message";
         const errorCode = ErrorCode.BadRequest;
-        const error = new ApiError(errorMessage, 404, errorCode);
+        const error = new ApiError(errorMessage, {}, 404, errorCode);
 
         it("is an Error", () => {
             expect(error).toBeInstanceOf(Error);

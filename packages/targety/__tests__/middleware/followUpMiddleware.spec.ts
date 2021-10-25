@@ -80,7 +80,6 @@ describe("Handler", () => {
     describe("#handle", () => {
         it("invokes correct path", async () => {
             const result = await handlerImplementation.handle(request);
-            console.log(result);
             expect(result).toMatchSnapshot();
         });
     });

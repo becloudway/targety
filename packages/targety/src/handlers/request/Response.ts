@@ -31,7 +31,6 @@ interface JsonObject {
 export interface ErrorBody {
     message: string;
     errorCode: string;
-    awsRequestId?: string;
     [k: string]: unknown;
 }
 
@@ -45,7 +44,6 @@ const requestErrorConverter =
             return {
                 message: errorMessage,
                 errorCode: (err as ApiError).errorCode,
-                awsRequestId: request.getRequestId(),
                 ...(err as ApiError).metadataToJson(),
             };
         }
@@ -54,7 +52,6 @@ const requestErrorConverter =
             return {
                 message: errorMessage,
                 errorCode: (err as ApiError).errorCode,
-                awsRequestId: request.getRequestId(),
             };
         }
 
@@ -168,7 +165,6 @@ export class Response<T> {
                 message: "Validation error",
                 errorCode: "ValidationError",
                 ...JSON.parse(error.message),
-                awsRequestId: request.getRequestId(),
             });
         }
 

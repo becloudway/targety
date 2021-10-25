@@ -129,7 +129,16 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
+        });
+        it("#badRequest: sends a 400 with error body and metadata", () => {
+            const expectedStatusCode = 400;
+            const apiError = new BadRequestError("Oops", { item: "pizza" });
+            const response = Response.fromError(request, apiError);
+            const errorBody = JSON.parse(response.body as string);
+
+            expect(response.statusCode).toEqual(expectedStatusCode);
+            expect(errorBody.message).toEqual(apiError.message);
+            expect(errorBody.errorCode).toEqual(apiError.errorCode);
         });
         it("#validationError: sends a 400 with error body", () => {
             const expectedStatusCode = 400;
@@ -148,7 +157,6 @@ describe("Response", () => {
             expect(errorBody.message).toEqual("Validation error");
             expect(errorBody.validationErrors).toEqual(JSON.parse(apiError.message).validationErrors);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
         it("#unauthorized: sends a 401 with error body", () => {
             const expectedStatusCode = 401;
@@ -159,7 +167,7 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
+
             expect(errorBody.stack).toBeUndefined();
         });
         it("#forbidden: sends a 403 with error body", () => {
@@ -171,7 +179,6 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
         it("#notFound: sends a 404 with error body", () => {
             const expectedStatusCode = 404;
@@ -182,7 +189,6 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
         it("#conflict: sends a 409 with error body", () => {
             const expectedStatusCode = 409;
@@ -193,7 +199,6 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
     });
     describe("5XX", () => {
@@ -206,7 +211,6 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toEqual(apiError.errorCode);
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
         it("#internalServer: sends a 500 with error body when error is not an apiError", () => {
             const expectedStatusCode = 500;
@@ -218,7 +222,6 @@ describe("Response", () => {
             expect(response.statusCode).toEqual(expectedStatusCode);
             expect(errorBody.message).toEqual(apiError.message);
             expect(errorBody.errorCode).toBeUndefined();
-            expect(errorBody.awsRequestId).toEqual(request.getRequestId());
         });
     });
 });

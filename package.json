@@ -20,6 +20,7 @@
         "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
         "build:lint": "eslint '*/**/*.{js,ts,tsx}'",
         "test": "jest --testTimeout=60000",
+        "test:hook": "jest --config=./jest.config.ci.js --passWithNoTests --testTimeout=60000 --findRelatedTests ",
         "build:clean-node-modules": "rm -rf **/node_modules; rm -rf ./node_modules",
         "prettier": "prettier --write ./packages/**"
     },
@@ -82,7 +83,7 @@
     "lint-staged": {
         "*.{ts,tsx}": [
             "yarn lint",
-            "yarn test"
+            "yarn test:hook"
         ],
         "*.{js,ts,tsx,json,css,scss,md,babelrc,eslintrc,prettierrc}": [
             "yarn prettier"

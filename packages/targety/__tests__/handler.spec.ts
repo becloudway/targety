@@ -79,7 +79,6 @@ describe("Handler", () => {
         });
         it("invokes correct path", async () => {
             const result = await handlerImplementation.handle(request);
-            console.log(result);
             expect(getProfileStub).toHaveBeenCalledTimes(1);
             expect(getProfileStub).toHaveBeenCalledWith(request);
         });
