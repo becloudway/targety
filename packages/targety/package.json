@@ -18,7 +18,6 @@
         "lib": "./lib"
     },
     "dependencies": {
-        "aws-lambda": "^1.0.6",
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",
         "cookie": "^0.4.0",
@@ -39,7 +38,8 @@
         "@types/pino": "^6.3.10",
         "@types/url-parse": "^1.4.3",
         "dotenv": "^8.1.0",
-        "typescript": "^4.4.2"
+        "typescript": "^4.4.2",
+        "aws-lambda": "^1.0.6"
     },
     "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
 }
