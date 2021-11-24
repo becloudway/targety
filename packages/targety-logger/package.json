@@ -8,11 +8,11 @@
         "test": "jest"
     },
     "dependencies": {
-        "@types/pino": "^6.3.12",
         "pino": "^6.13.0"
     },
     "devDependencies": {
-        "@dev/test-helper": "^0.0.5"
+        "@dev/test-helper": "^0.0.5",
+        "@types/pino": "^6.3.12"
     },
     "author": "Mitch Mommers",
     "license": "MIT",
