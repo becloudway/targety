@@ -4,3 +4,4 @@ test/
 jest.config.js
 pipelines/
 *.tgz
+package-lock.json
