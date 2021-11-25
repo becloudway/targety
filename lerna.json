@@ -1,9 +1,9 @@
 {
-  "packages": [
-    "packages/*",
-    "packages/@dev/*"
-  ],
-  "version": "independent",
-  "npmClient": "yarn",
-  "useWorkspaces": true
+    "packages": ["packages/*", "packages/@dev/*"],
+    "bootstrap": {
+        "npmClientArgs": ["--no-package-lock"]
+    },
+    "version": "independent",
+    "npmClient": "yarn",
+    "useWorkspaces": true
 }
