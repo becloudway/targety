@@ -8,8 +8,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "@types/pino": "^6.3.12",
-        "pino": "^6.13.0"
+        "pino": "^7.0.5"
     },
     "devDependencies": {
         "@dev/test-helper": "^0.0.5"

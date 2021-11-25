@@ -40,7 +40,7 @@ export class PathResolver {
         const resource: string = request.getResource();
         const path: string = request.getPath();
 
-        LOGGER.debug("Looking for resource %s for path %s", resource, path);
+        LOGGER.debug(resource, "Looking for resource %s for path %s", path);
         const isProxyPath = this.isProxyPathRequest(resource);
 
         const finalResource = isProxyPath ? this.getResourceFromPath(path) : undefined;
@@ -52,7 +52,7 @@ export class PathResolver {
         };
     }
 
-    public isProxyPathRequest(path: string) {
+    public isProxyPathRequest(path: string): boolean {
         return path.split("/").includes("{proxy+}");
     }
 
@@ -85,7 +85,7 @@ export class PathResolver {
             pathParams[cleanKey] = value;
         });
 
-        LOGGER.debug("resolved path params: %j", pathParams);
+        LOGGER.debug(pathParams, "resolved path params");
 
         return pathParams;
     }

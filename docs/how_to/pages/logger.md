@@ -23,6 +23,8 @@ Using yarn:
 yarn add targety-logger
 ```
 
+Optionally you can install `@types/pino` for better typing support.
+
 ## How to use targety-logger
 
 Targety-Logger exports two things 1) the default logger 2) the createLogger function.
@@ -43,8 +45,11 @@ Creating your own logger can be done using the createLogger function which provi
 import { createLogger } from "targety-logger";
 
 const logger = createLogger("my-logger" /* name */, { /* pino options */ })
-logger.info("some message");
+logger.logger // this is the actuall pino logger
 ```
+
+Also keep in mind that Targety exports a LoggerWrapper object that only exposes parts of the actuall pino logger.
+However the pino logger can be accessed through the LoggerWrapper.
 
 For more info on how to use pino's logger and the options that you can provide see the [further reading](#further-reading) section.
 
@@ -52,3 +57,6 @@ For more info on how to use pino's logger and the options that you can provide s
 
 - [Pino](https://github.com/pinojs/pino)
 - [Pino Options](https://github.com/pinojs/pino/blob/master/docs/api.md#options)
+
+## possible updates
+- Override the logging library used
