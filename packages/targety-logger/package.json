@@ -1,6 +1,6 @@
 {
     "name": "targety-logger",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "The logging module for targety",
     "main": "lib/index.js",
     "scripts": {
@@ -15,5 +15,5 @@
     },
     "author": "Mitch Mommers",
     "license": "MIT",
-    "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
+    "gitHead": "e1564e4d6549a1e548caeb21df26cb692fe10ee9"
 }

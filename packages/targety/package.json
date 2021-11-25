@@ -1,6 +1,6 @@
 {
     "name": "targety",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "AWS routing library for AWS Lambda, routing straight to your target",
     "license": "MIT",
     "main": "lib/index.js",
@@ -25,7 +25,7 @@
         "lodash.tostring": "^4.1.4",
         "reflect-metadata": "^0.1.13",
         "targety-errors": "^0.0.1",
-        "targety-logger": "^0.1.1",
+        "targety-logger": "^0.1.2",
         "url-parse": "^1.4.7",
         "yn": "^4.0.0"
     },
@@ -42,5 +42,5 @@
         "dotenv": "^8.1.0",
         "typescript": "^4.4.2"
     },
-    "gitHead": "66fff9544217274b0d4f645ed311b17ec91be0dc"
+    "gitHead": "e1564e4d6549a1e548caeb21df26cb692fe10ee9"
 }
