@@ -2658,13 +2658,6 @@
     "@types/pino-std-serializers" "*"
     sonic-boom "^2.1.0"
 
-"@types/pino@^7.0.5":
-  version "7.0.5"
-  resolved "https://registry.npmjs.org/@types/pino/-/pino-7.0.5.tgz#1c84a81b924a6a9e263dbb581dffdbad7a3c60c4"
-  integrity sha512-wKoab31pknvILkxAF8ss+v9iNyhw5Iu/0jLtRkUD74cNfOOLJNnqfFKAv0r7wVaTQxRZtWrMpGfShwwBjOcgcg==
-  dependencies:
-    pino "*"
-
 "@types/prettier@^2.0.0":
   version "2.3.2"
   resolved "https://registry.npmjs.org/@types/prettier/-/prettier-2.3.2.tgz#fc8c2825e4ed2142473b4a81064e6e081463d1b3"
@@ -8376,7 +8369,7 @@ pino-std-serializers@^4.0.0:
   resolved "https://registry.npmjs.org/pino-std-serializers/-/pino-std-serializers-4.0.0.tgz#1791ccd2539c091ae49ce9993205e2cd5dbba1e2"
   integrity sha512-cK0pekc1Kjy5w9V2/n+8MkZwusa6EyyxfeQCB799CQRhRt/CqYKiWs5adeu8Shve2ZNffvfC/7J64A2PJo1W/Q==
 
-pino@*, pino@^7.0.5:
+pino@^7.0.5:
   version "7.4.1"
   resolved "https://registry.npmjs.org/pino/-/pino-7.4.1.tgz#ccac88e77563bab9b1ced05521b5eb94f17ec7e1"
   integrity sha512-dVqLxCSsINhHJQP9wXplhYtSFwNLrFtOeVK/gWeprF+KVlibR0zePBPRPZjWzWeCY2CmtFzQE09rcZiM3GO2og==
