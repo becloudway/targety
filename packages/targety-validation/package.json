@@ -7,6 +7,11 @@
         "build": "rm -rf ./lib && tsc",
         "test": "jest"
     },
+    "dependencies": {
+        "targety": "^0.5.2",
+        "targety-logger": "^0.1.2",
+        "targety-errors": "^0.0.1"
+    },
     "devDependencies": {
         "@dev/test-helper": "^0.0.5"
     },

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import "reflect-metadata";
 
-import { ValidationClass, ValidatorOptions } from "../../validation";
-import { ValidationError, InternalServerError } from "../../errors";
-import { Request } from "../../handlers/request/Request";
+import { ValidationClass, ValidatorOptions } from "../";
+import { ValidationError, InternalServerError } from "targety-errors";
+import { Request } from "targety";
 import { LOGGER } from "targety-logger";
 
 export const ResponseValidation = (

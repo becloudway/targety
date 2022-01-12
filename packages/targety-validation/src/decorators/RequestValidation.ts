@@ -1,32 +1,31 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import "reflect-metadata";
 
-import { ValidationClass, ValidatorOptions, plainToClass } from "../../validation";
-import { ValidationError } from "../../errors";
-import { Request } from "../../handlers/request/Request";
-import { RequestParams } from "../enums";
+import { ValidationClass, ValidatorOptions, plainToClass } from "../";
+import { ValidationError } from "targety-errors";
+import { Request, Enums } from "targety";
 import { LOGGER } from "targety-logger";
 
-const getValidationObject = (request: Request, paramType: RequestParams): object => {
+const getValidationObject = (request: Request, paramType: Enums.RequestParams): object => {
     switch (paramType) {
-        case RequestParams.BODY:
+        case Enums.RequestParams.BODY:
             return request.getBody();
-        case RequestParams.QUERY:
+        case Enums.RequestParams.QUERY:
             return request.getQueryParams();
-        case RequestParams.PATH:
+        case Enums.RequestParams.PATH:
             return request.getPathParams();
     }
 };
 
-const setValidationObject = (request: Request, paramType: RequestParams, input: any): void => {
+const setValidationObject = (request: Request, paramType: Enums.RequestParams, input: any): void => {
     switch (paramType) {
-        case RequestParams.BODY:
+        case Enums.RequestParams.BODY:
             request.setBody(input);
             break;
-        case RequestParams.QUERY:
+        case Enums.RequestParams.QUERY:
             request.setQueryParams(input);
             break;
-        case RequestParams.PATH:
+        case Enums.RequestParams.PATH:
             request.setPathParams(input);
             break;
     }
@@ -34,7 +33,7 @@ const setValidationObject = (request: Request, paramType: RequestParams, input: 
 
 export const RequestValidation = (
     Klass: new () => ValidationClass,
-    paramType: RequestParams,
+    paramType: Enums.RequestParams,
     options: RequestValidationOptions,
     doApplyGroups?: (input: any) => string[],
 ): MethodDecorator => {
@@ -76,7 +75,7 @@ export interface RequestValidationOptions {
 }
 
 const createMappingDecorator =
-    (paramType: RequestParams) =>
+    (paramType: Enums.RequestParams) =>
     (
         klass: new () => ValidationClass,
         options: RequestValidationOptions = {},
@@ -84,6 +83,6 @@ const createMappingDecorator =
     ): MethodDecorator =>
         RequestValidation(klass, paramType, options, doApplyGroups);
 
-export const ValidateBody = createMappingDecorator(RequestParams.BODY);
-export const ValidateQuery = createMappingDecorator(RequestParams.QUERY);
-export const ValidatePath = createMappingDecorator(RequestParams.PATH);
+export const ValidateBody = createMappingDecorator(Enums.RequestParams.BODY);
+export const ValidateQuery = createMappingDecorator(Enums.RequestParams.QUERY);
+export const ValidatePath = createMappingDecorator(Enums.RequestParams.PATH);
