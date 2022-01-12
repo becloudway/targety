@@ -62,7 +62,7 @@ export abstract class LambdaEntryPoint {
             }
             return await this.handleRequest(finalRequest, context);
         } catch (e) {
-            if (finalRequest.isType(RequestType.REQUEST)) {
+            if (finalRequest?.isType(RequestType.REQUEST)) {
                 LOGGER.error(e, "Error handling request");
                 return Response.fromError(finalRequest as Request, e);
             }

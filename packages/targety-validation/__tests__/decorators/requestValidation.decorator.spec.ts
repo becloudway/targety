@@ -1,7 +1,7 @@
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
-import { IsNumber, IsString, ValidationClass } from "../../src/validation";
-import { ValidationError as ApiValidationError } from "../../src/errors";
-import { ValidateBody, Request } from "../../src";
+import { IsNumber, IsString, ValidationClass, ValidateBody } from "../../src/";
+import { ValidationError as ApiValidationError } from "targety-errors";
+import { Request } from "targety";
 
 class Body extends ValidationClass {
     @IsString()

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { ApiGateWayProxyEvent } from "@dev/test-helper";
 import {
-    Error,
+    Error as ApiError,
+    Interfaces,
     LambdaEntryPoint,
-    Context,
     GenericEvent,
     Handler,
     LambdaProxyEvent,
@@ -53,15 +53,15 @@ describe("EntryPoint", () => {
     });
 
     it("invokes the heartbeat function when no event is passed and returns 204", async () => {
-        const response = (await implementation.handle({}, {} as Context)) as ResponseBody;
+        const response = (await implementation.handle({}, {} as Interfaces.Context)) as ResponseBody;
         expect(context.callbackWaitsForEmptyEventLoop).toBeFalsy();
         expect(HandlerImplementation.prototype.handle).not.toHaveBeenCalled();
         expect(response.statusCode).toEqual(204);
     });
 
     it("returns errorResponse when handler throws", async () => {
-        handleMock.mockRejectedValue(new Error.BadRequestError("Oops"));
-        const response = (await implementation.handle(event, {} as Context)) as ResponseBody;
+        handleMock.mockRejectedValue(new ApiError.BadRequestError("Oops"));
+        const response = (await implementation.handle(event, {} as Interfaces.Context)) as ResponseBody;
         expect(HandlerImplementation.prototype.handle).toHaveBeenCalledTimes(1);
         expect(HandlerImplementation.prototype.handle).toHaveBeenCalledWith(expect.any(Request), {
             callbackWaitsForEmptyEventLoop: false,
@@ -75,7 +75,7 @@ describe("EntryPoint", () => {
             throw new Error("OOPS");
         };
         implementation = new EntryPointImplementation();
-        const response = (await implementation.handle(event, {} as Context)) as ResponseBody;
+        const response = (await implementation.handle(event, {} as Interfaces.Context)) as ResponseBody;
         expect(HandlerImplementation.prototype.handle).not.toHaveBeenCalled();
         expect(response.statusCode).toEqual(500);
     });

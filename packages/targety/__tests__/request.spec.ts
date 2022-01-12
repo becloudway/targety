@@ -123,8 +123,7 @@ describe("Request", () => {
             expect(request.getHeader("doesnotexist")).toBeUndefined();
         });
         it("#getContext: allows getting a requestContext property", () => {
-            expect(request.getContext("identity")).toEqual(event.requestContext.identity);
-            expect(request.getContext("unknown")).toBeUndefined();
+            expect(request.getContext()).toEqual(event.requestContext);
         });
         it("#getCookies", () => {
             expect(request.getCookies()).toBeInstanceOf(Object);

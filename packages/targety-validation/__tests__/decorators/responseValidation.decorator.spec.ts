@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* tslint:disable:max-classes-per-file */
 
-import { IsNumber, IsString, ValidationClass } from "../../src/validation";
-import { ValidateResponse } from "../../src/";
+import { IsNumber, IsString, ValidationClass, ValidateResponse } from "../../src";
 
 class Body extends ValidationClass {
     @IsString()

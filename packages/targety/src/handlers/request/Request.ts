@@ -1,8 +1,6 @@
 import cookie from "cookie";
-import get from "lodash.get";
-import toString from "lodash.tostring";
 import * as querystring from "querystring";
-import URLParse from "url-parse";
+import { URL } from "url";
 import { ContentType } from "../../common/enums";
 import { HttpMethod } from "../../common/types";
 import { GenericRequest, RequestType } from "../../GenericRequest";
@@ -38,7 +36,7 @@ export class Request extends GenericRequest {
     private resource: string;
     private xhr: boolean;
     private method: HttpMethod;
-    private referer: URLParse;
+    private referer: URL;
     private userAgent: string;
     private identity: LambdaIdentity;
     private rawLambdaEvent: LambdaProxyEvent;
@@ -63,23 +61,23 @@ export class Request extends GenericRequest {
         /** * Parsed cookies or empty object */
         this.cookies = this.parseCookies(this.headers.cookie);
 
-        this.ip = get(apiGateWayProxyEvent, "requestContext.identity.sourceIp") || "";
+        this.ip = apiGateWayProxyEvent.requestContext?.identity?.sourceIp || "";
 
         /**
          * This property is an object containing properties mapped to the named route “parameters”. For example,
          * if you have the route /user/:name, then the “name” property is available as req.params.name.
          * This object defaults to {}.
          */
-        this.params = get(apiGateWayProxyEvent, "pathParameters") || {};
+        this.params = apiGateWayProxyEvent.pathParameters || {};
 
         /** * Passed query string parameters. Defaults to {}. */
-        this.query = get(apiGateWayProxyEvent, "queryStringParameters") || {};
+        this.query = apiGateWayProxyEvent.queryStringParameters || {};
 
         /** * Contains the path part of the request URL. */
-        this.path = get(apiGateWayProxyEvent, "path") || "";
+        this.path = apiGateWayProxyEvent.path || "";
 
         /** * Contains the resource path. */
-        this.resource = get(apiGateWayProxyEvent, "resource") || "";
+        this.resource = apiGateWayProxyEvent.resource || "";
 
         /**
          * A Boolean property that is true if the request’s X-Requested-With header field is “XMLHttpRequest”,
@@ -87,22 +85,19 @@ export class Request extends GenericRequest {
          */
         this.xhr = false;
 
-        this.method = (toString(get(apiGateWayProxyEvent, "httpMethod")).toUpperCase() || "GET") as HttpMethod;
-
-        /** Parsed referring including parsed query */
-        this.referer = URLParse(toString(this.headers.referer), true);
+        this.method = (apiGateWayProxyEvent.httpMethod?.toUpperCase() || "GET") as HttpMethod;
 
         /** User agent passed from API Gateway */
-        this.userAgent = get(apiGateWayProxyEvent, "requestContext.identity.userAgent") || "";
+        this.userAgent = apiGateWayProxyEvent.requestContext?.identity?.userAgent || "";
 
         /** AWS Lambda Identity (source: apiGateway, Cognito, or custom). Can be extended for internal api purpose */
-        this.identity = get(apiGateWayProxyEvent, "requestContext.identity");
+        this.identity = apiGateWayProxyEvent.requestContext?.identity;
 
         /** Api gateway returns the stage in it's context */
-        this.stage = get(apiGateWayProxyEvent, "requestContext.stage");
+        this.stage = apiGateWayProxyEvent.requestContext?.stage;
 
         /** the request's ID which is a unique identifier used by AWS for an event */
-        this.requestId = get(apiGateWayProxyEvent, "requestContext.requestId");
+        this.requestId = apiGateWayProxyEvent.requestContext?.requestId;
 
         /** The origin domain coming from the request */
         this.origin = this.getHeader("origin");
@@ -119,8 +114,8 @@ export class Request extends GenericRequest {
      * @param {string} propertyPath
      * @returns {string|object}
      */
-    public getContext(propertyPath: string): string | object {
-        return get(this.rawLambdaEvent, `requestContext.${propertyPath}`);
+    public getContext(): LambdaProxyEvent["requestContext"] {
+        return this.rawLambdaEvent?.requestContext;
     }
 
     public getQueryParams<T>(defaults?: Partial<T>): T {
@@ -223,7 +218,7 @@ export class Request extends GenericRequest {
      * @param lambdaEvent
      */
     private parseHeaders(lambdaEvent: LambdaProxyEvent): { [key: string]: string[] } {
-        const lambdaHeaders = { ...get(lambdaEvent, "multiValueHeaders") };
+        const lambdaHeaders = { ...lambdaEvent.multiValueHeaders };
 
         const headers: { [key: string]: string[] } = Object.keys(lambdaHeaders).reduce(
             (result: { [key: string]: string[] }, key) => {
@@ -274,7 +269,7 @@ export class Request extends GenericRequest {
      * @param lambdaEvent
      */
     private parseBody(lambdaEvent: LambdaProxyEvent): object | string {
-        const bodyString = get(lambdaEvent, "body") || null;
+        const bodyString = lambdaEvent.body || null;
 
         if (!bodyString) {
             return null;
@@ -296,8 +291,18 @@ export class Request extends GenericRequest {
         return bodyString;
     }
 
-    public getReferer(): URLParse {
-        return this.referer;
+    /**
+     * Returns URL object when a valid URL is found for referer.
+     * Otherwise returns undefined if the URL fails to parse
+     *
+     * @returns the parsed Referer url
+     */
+    public getReferer(): URL {
+        try {
+            return new URL((this.headers?.referer || [])[0]);
+        } catch (ex) {
+            return undefined;
+        }
     }
 
     /**
