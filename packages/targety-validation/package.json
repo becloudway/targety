@@ -1,6 +1,6 @@
 {
     "name": "targety-validation",
-    "version": "0.0.1",
+    "version": "0.0.2-alpha.0",
     "description": "The validation module for targety",
     "main": "lib/index.js",
     "scripts": {
@@ -8,11 +8,11 @@
         "test": "jest"
     },
     "dependencies": {
-        "targety": "^0.5.2",
-        "targety-logger": "^0.1.2",
-        "targety-errors": "^0.0.1",
         "class-transformer": "^0.5.1",
-        "class-validator": "^0.13.2"
+        "class-validator": "^0.13.2",
+        "targety": "^0.5.3-alpha.0",
+        "targety-errors": "^0.0.1",
+        "targety-logger": "^0.1.2"
     },
     "devDependencies": {
         "@dev/test-helper": "^0.0.5"
